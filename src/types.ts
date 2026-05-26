@@ -10,7 +10,15 @@ export interface CourseRecord {
   startDate: string
   endDate: string
   location?: string
-  source?: 'ics' | 'wakeup' | 'manual'
+  source?: 'ics' | 'wakeup' | 'starlink' | 'shiguang' | 'wakeup-file' | 'json' | 'manual'
+  weeks?: number[]
+  startNode?: number
+  step?: number
+  teacher?: string
+  rescheduled?: boolean
+  originalDay?: number
+  originalWeek?: number
+  originalDate?: string
 }
 
 export interface CourseSummary {
