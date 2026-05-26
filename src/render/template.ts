@@ -14,20 +14,21 @@ const S: Record<DayCourseView['status'], { label: string; bg: string; fg: string
 
 function ff(name: string) { return name ? `'${name}',` : '' }
 
-export function renderGroupScheduleTemplate(items: DayCourseView[], title: string, fontName = '') {
+export function renderGroupScheduleTemplate(items: DayCourseView[], title: string, fontName = '', logFn?: (...args: unknown[]) => void) {
+  if (logFn) logFn('[template] 群课表模板渲染: 共', items.length, '个 item')
   const rows = items.map((item, idx) => {
     const s = S[item.status]
     const y = 160 + idx * 120
     const summary = [item.courseName, item.location].filter(Boolean).join(' @ ')
     const timeInfo = [item.startTime && item.endTime ? `${item.startTime}-${item.endTime}` : '', item.statusDetail].filter(Boolean).join(' ')
-    return `
+  return `
     <div class="row" style="top:${y}px">
       <img class="av" src="${esc(item.useravatar || FALLBACK_AVATAR)}" alt="">
       <div class="ar"></div>
-      <div class="nn" style="top:${y + 15}px">${esc(item.username)}</div>
-      <div class="bd" style="top:${y + 60}px;background:${s.bg};color:${s.fg}">${s.label}</div>
-      <div class="su" style="top:${y + 65}px">${esc(summary)}</div>
-      <div class="ti" style="top:${y + 95}px">${esc(timeInfo)}</div>
+      <div class="nn" style="top:15px">${esc(item.username)}</div>
+      <div class="bd" style="top:60px;background:${s.bg};color:${s.fg}">${s.label}</div>
+      <div class="su" style="top:65px">${esc(summary)}</div>
+      <div class="ti" style="top:95px">${esc(timeInfo)}</div>
     </div>`
   }).join('')
 
@@ -35,7 +36,7 @@ export function renderGroupScheduleTemplate(items: DayCourseView[], title: strin
 <html><head><meta charset="utf-8"><style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{width:1200px;background:#FFF;font-family:${ff(fontName)}"Microsoft YaHei","PingFang SC",sans-serif;overflow:hidden}
-.w{width:1200px;position:relative;min-height:${40 + 120 + items.length * 120 + 40}px}
+.w{width:1200px;position:relative;min-height:${40 + 120 + items.length * 120 + 80}px}
 .ac{position:absolute;left:40px;top:40px;width:20px;height:60px;background:#26A69A;border-radius:0 4px 4px 0}
 .tl{position:absolute;left:80px;top:40px;font-size:48px;font-weight:700;color:#000;white-space:nowrap}
 .ul{position:absolute;left:80px;top:110px;width:300px;height:5px;background:#A7FFEB;border-radius:3px}
@@ -44,8 +45,8 @@ body{width:1200px;background:#FFF;font-family:${ff(fontName)}"Microsoft YaHei","
 .ar{position:absolute;left:140px;top:40px;width:0;height:0;border-top:20px solid transparent;border-bottom:20px solid transparent;border-left:30px solid #BDBDBD}
 .nn{position:absolute;left:190px;font-size:32px;font-weight:700;color:#333;white-space:nowrap}
 .bd{position:absolute;left:190px;font-size:24px;font-weight:700;padding:2px 10px;white-space:nowrap}
-.su{position:absolute;left:310px;font-size:24px;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:800px}
-.ti{position:absolute;left:310px;font-size:24px;color:#888;white-space:nowrap}
+.su{position:absolute;left:190px;font-size:24px;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:950px}
+.ti{position:absolute;left:190px;font-size:24px;color:#888;white-space:nowrap}
 </style></head><body>
 <div class="w">
   <div class="ac"></div>

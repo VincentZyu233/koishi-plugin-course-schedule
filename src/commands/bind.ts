@@ -17,7 +17,7 @@ export function registerBindCommand(
   ctx: Context, config: Config, services: CourseScheduleServices,
   icsFileService: IcsFileService, icsWatcher: IcsWatcher,
 ) {
-  ctx.command(`${config.baseCommand}.${config.bindCommand} [text:text]`)
+  ctx.command(`${config.baseCommand}.${config.bindCommand} [text:text]`, `导入课表捏`)
     .example(`${config.baseCommand}.${config.bindCommand} 这是来自「WakeUp课程表」的课表分享......分享口令为「xxxxxxxx」`)
     .example(`${config.baseCommand}.${config.bindCommand} https://example.com/course.ics`)
     .action(async ({ session }, text) => {

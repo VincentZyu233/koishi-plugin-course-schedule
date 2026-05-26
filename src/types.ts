@@ -56,6 +56,26 @@ export interface RankingItem {
   courseCount: number
 }
 
+export interface WeeklyCourseView {
+  name: string
+  startTime: string
+  endTime: string
+  location: string
+  teacher: string
+  rescheduled: boolean
+  originalDate: string
+}
+
+export interface WeeklyDayView {
+  label: string
+  date: string
+  isToday: boolean
+  isHoliday: boolean
+  holidayName: string
+  isWorkdayOnWeekend: boolean
+  courses: WeeklyCourseView[]
+}
+
 export interface TargetUser {
   userId: string
   username: string

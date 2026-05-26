@@ -4,24 +4,28 @@ import { DataManager } from './data-manager'
 import { ICSParser } from './ics-parser'
 import { ScheduleService } from './schedule-service'
 import { ImageGenerator } from '../render/image-generator'
+import { HolidayService } from './holiday'
 
 export function createCourseScheduleServices(ctx: Context, config: Config) {
   const dataManager = new DataManager(ctx)
   const icsParser = new ICSParser()
-  const imageGenerator = new ImageGenerator(ctx, config.textFontPath, config.renderWaitUntil)
-  const scheduleService = new ScheduleService(ctx, dataManager, icsParser, imageGenerator)
+  const imageGenerator = new ImageGenerator(ctx, config.textFontPath, config.renderWaitUntil, config.verboseConsoleLog)
+  const logFn = (...args: unknown[]) => {
+    if (config.verboseConsoleLog) ctx.logger.info('[course-schedule]', ...args)
+  }
+  const holidayService = new HolidayService(ctx, logFn)
+  const scheduleService = new ScheduleService(ctx, dataManager, icsParser, imageGenerator, holidayService)
 
   return {
     dataManager,
     icsParser,
     imageGenerator,
+    holidayService,
     scheduleService,
     registerDatabase() {
       dataManager.registerDatabase()
     },
-    log(...args: unknown[]) {
-      if (config.verboseConsoleLog) ctx.logger.info('[course-schedule]', ...args)
-    },
+    log: logFn,
   }
 }
 

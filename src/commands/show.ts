@@ -4,7 +4,7 @@ import type { CourseScheduleServices } from '../services'
 import { parseDayOffset } from '../utils/date'
 
 export function registerShowCommand(ctx: Context, config: Config, services: CourseScheduleServices) {
-  ctx.command(`${config.baseCommand}.${config.showCommand} [day:text]`)
+  ctx.command(`${config.baseCommand}.${config.showCommand} [day:text]`, `查看自己某天的全部课程`)
     .action(async ({ session }, day) => {
       const dayOffset = parseDayOffset(day)
       services.log('[show] 频道=', session.channelId, '用户=', session.userId, 'dayOffset=', dayOffset)

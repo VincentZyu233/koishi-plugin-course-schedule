@@ -3,7 +3,7 @@ import type { Config } from '../index'
 import type { CourseScheduleServices } from '../services'
 
 export function registerRankingCommand(ctx: Context, config: Config, services: CourseScheduleServices) {
-  ctx.command(`${config.baseCommand}.${config.rankingCommand}`)
+  ctx.command(`${config.baseCommand}.${config.rankingCommand}`, `查看本周本群上课排行榜`)
     .action(async ({ session }) => {
       services.log('[ranking] 频道=', session.channelId)
       const img = await services.scheduleService.renderWeeklyRanking(session.channelId)

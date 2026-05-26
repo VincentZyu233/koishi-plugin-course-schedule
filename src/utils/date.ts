@@ -82,3 +82,29 @@ export function getWeekRange(baseDate: Date) {
 
   return { days }
 }
+
+export function calculateDateFromWeekAndDay(semesterStart: string, week: number, dayOfWeek: number): Date | null {
+  if (week < 1 || dayOfWeek < 1 || dayOfWeek > 7) return null
+  const start = new Date(semesterStart)
+  start.setHours(0, 0, 0, 0)
+  const startWeekday = start.getDay()
+  const mondayOffset = startWeekday === 0 ? -6 : 1 - startWeekday
+  const monday = new Date(start)
+  monday.setDate(start.getDate() + mondayOffset)
+  const result = new Date(monday)
+  result.setDate(monday.getDate() + (week - 1) * 7 + (dayOfWeek - 1))
+  return result
+}
+
+export function getWeekNumberFromDate(semesterStart: string, date: Date): number {
+  const start = new Date(semesterStart)
+  start.setHours(0, 0, 0, 0)
+  const startWeekday = start.getDay()
+  const mondayOffset = startWeekday === 0 ? -6 : 1 - startWeekday
+  const monday = new Date(start)
+  monday.setDate(start.getDate() + mondayOffset)
+  const target = new Date(date)
+  target.setHours(0, 0, 0, 0)
+  const diffDays = Math.floor((target.getTime() - monday.getTime()) / (1000 * 60 * 60 * 24))
+  return Math.floor(diffDays / 7) + 1
+}

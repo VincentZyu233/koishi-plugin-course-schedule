@@ -1,9 +1,10 @@
 import type { Context } from 'koishi'
 import { TABLE_NAME } from '../constants'
-import type { CourseRecord, DayCourseView, RankingItem } from '../types'
+import type { CourseRecord, DayCourseView, RankingItem, WeeklyDayView, WeeklyCourseView } from '../types'
 import type { DataManager } from './data-manager'
 import type { ICSParser } from './ics-parser'
 import type { ImageGenerator } from '../render/image-generator'
+import type { HolidayService } from './holiday'
 import {
   formatDurationMinutes,
   getDayOffsetDate,
@@ -11,6 +12,8 @@ import {
   isCourseActiveOnDate,
   toIsoDate,
   weekdayNameOfDate,
+  calculateDateFromWeekAndDay,
+  getWeekNumberFromDate,
 } from '../utils/date'
 
 export class ScheduleService {
@@ -19,6 +22,7 @@ export class ScheduleService {
     private _dataManager: DataManager,
     private _icsParser: ICSParser,
     private imageGenerator: ImageGenerator,
+    private holidayService: HolidayService,
   ) {}
 
   private log(...args: unknown[]) {
@@ -41,6 +45,17 @@ export class ScheduleService {
     const targetDate = getDayOffsetDate(dayOffset)
     const currentWeekday = weekdayNameOfDate(targetDate)
     const allCourses = await this.listUserCourses(channelId, userid)
+
+    const holidayInfo = await this.holidayService.getHolidayInfoForDate(targetDate)
+    if (holidayInfo?.isHoliday) {
+      const rescheduled = allCourses.filter(c => isCourseActiveOnDate(c, targetDate, currentWeekday))
+      if (!rescheduled.length) {
+        return `今天是 ${holidayInfo.name}，好好休息吧！🎉`
+      }
+    } else if (holidayInfo?.isWorkdayOnWeekend) {
+      this.log('[schedule] 今天是调休上班日:', holidayInfo.name)
+    }
+
     const courses = allCourses
       .filter(course => isCourseActiveOnDate(course, targetDate, currentWeekday))
       .sort((a, b) => a.curriculumtime.localeCompare(b.curriculumtime, 'zh-CN'))
@@ -54,27 +69,63 @@ export class ScheduleService {
     const targetDate = getDayOffsetDate(dayOffset)
     const weekday = weekdayNameOfDate(targetDate)
     const courses = await this.listChannelCourses(channelId)
+
+    this.log('[group] === 群课表渲染开始 ===')
+    this.log('[group] 目标日期:', toIsoDate(targetDate), `(${weekday})`, 'dayOffset=', dayOffset)
+
+    for (let i = 0; i < courses.length; i++) {
+      const c = courses[i]
+      this.log(`[group]   DB课程${i + 1}: ${c.curriculumname} | ${c.curriculumndate.join(',')} | ${c.startDate} ~ ${c.endDate} | ${c.curriculumtime} | 用户=${c.userid}`)
+    }
+
+    const holidayInfo = await this.holidayService.getHolidayInfoForDate(targetDate)
+    if (holidayInfo?.isHoliday) {
+      const rescheduled = courses.filter(c => isCourseActiveOnDate(c, targetDate, weekday))
+      if (!rescheduled.length) {
+        return `今天是 ${holidayInfo.name}，群友们都在休息！🎉`
+      }
+    } else if (holidayInfo?.isWorkdayOnWeekend) {
+      this.log('[group] 今天是调休上班日:', holidayInfo.name)
+    }
+
     const byUser = new Map<string, CourseRecord[]>()
+    let passedCount = 0
     let filteredCount = 0
 
     for (const course of courses) {
-      if (!isCourseActiveOnDate(course, targetDate, weekday)) continue
+      if (!isCourseActiveOnDate(course, targetDate, weekday)) {
+        filteredCount++
+        const reasons: string[] = []
+        if (!course.curriculumndate.includes(weekday)) reasons.push('星期不匹配')
+        if (toIsoDate(targetDate) < course.startDate) reasons.push('日期早于startDate')
+        if (toIsoDate(targetDate) > course.endDate) reasons.push('日期晚于endDate')
+        this.log(`[group]   过滤掉: ${course.curriculumname} (原因: ${reasons.join(', ')})`)
+        continue
+      }
+      passedCount++
       const bucket = byUser.get(course.userid) ?? []
       bucket.push(course)
       byUser.set(course.userid, bucket)
-      filteredCount++
     }
 
-    this.log('[schedule] renderChannelSchedule, 总课程=', courses.length, '符合条件=', filteredCount, '独立用户=', byUser.size)
+    this.log('[group] 过滤结果: 通过=', passedCount, '未通过=', filteredCount, '独立用户=', byUser.size)
 
     const items: DayCourseView[] = []
     for (const [userid, userCourses] of byUser) {
       userCourses.sort((a, b) => a.curriculumtime.localeCompare(b.curriculumtime, 'zh-CN'))
+      this.log(`[group]   用户 ${userid}: ${userCourses.length} 条课程`)
+      for (const uc of userCourses) {
+        this.log(`[group]     - ${uc.curriculumname} | ${uc.curriculumtime} | ${uc.location}`)
+      }
       const active = this.pickRepresentativeCourse(userCourses, dayOffset)
       if (active) {
-        items.push(this.toDayCourseView(active, dayOffset))
+        this.log(`[group]     代表课程: ${active.curriculumname} | ${active.curriculumtime} | ${active.location}`)
+        const view = this.toDayCourseView(active, dayOffset)
+        this.log(`[group]     DayCourseView: courseName=${view.courseName}, startTime=${view.startTime}, endTime=${view.endTime}, location=${view.location}, status=${view.status}`)
+        items.push(view)
       } else {
         const sample = userCourses[0]
+        this.log(`[group]     无代表课程, 使用 nocourse`)
         items.push({
           userid,
           username: sample.username,
@@ -88,6 +139,9 @@ export class ScheduleService {
         })
       }
     }
+
+    this.log('[group] 最终 items 数量:', items.length)
+    this.log('[group] === 群课表渲染结束 ===')
 
     return this.imageGenerator.renderGroupSchedule(items, targetDate)
   }
@@ -128,6 +182,79 @@ export class ScheduleService {
     const week = getWeekRange(new Date())
     const dateRange = `${week.days[0].date.toLocaleDateString('zh-CN')} - ${week.days[6].date.toLocaleDateString('zh-CN')}`
     return this.imageGenerator.renderRanking(ranking, dateRange)
+  }
+
+  async renderWeeklySchedule(channelId: string, userid: string, weekNumber?: number) {
+    const allCourses = await this.listUserCourses(channelId, userid)
+    if (!allCourses.length) return null
+
+    const semesterStart = this.getSemesterStart(allCourses)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const currentWeek = getWeekNumberFromDate(semesterStart, today)
+    const week = weekNumber ?? currentWeek
+    if (week < 1) return '周数不能小于 1'
+
+    const maxWeek = Math.max(...allCourses.flatMap(c => c.weeks?.length ? c.weeks : []), 0)
+    if (maxWeek > 0 && week > maxWeek) return `第 ${week} 周已超出本学期课程周数`
+
+    const weekdayLabels = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+    const days: WeeklyDayView[] = []
+
+    const yearDates = days.map(() => new Date())
+    const firstDate = calculateDateFromWeekAndDay(semesterStart, week, 1)
+    if (firstDate) await this.holidayService.loadHolidayData(firstDate.getFullYear())
+
+    for (let d = 1; d <= 7; d++) {
+      const targetDate = calculateDateFromWeekAndDay(semesterStart, week, d)
+      if (!targetDate) continue
+      const dateStr = targetDate.toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })
+      const isToday = targetDate.getTime() === today.getTime()
+      const weekday = weekdayNameOfDate(targetDate)
+
+      const holidayInfo = await this.holidayService.getHolidayInfoForDate(targetDate)
+      const isHoliday = holidayInfo?.isHoliday ?? false
+      const holidayName = holidayInfo?.name ?? ''
+      const isWorkdayOnWeekend = holidayInfo?.isWorkdayOnWeekend ?? false
+
+      const dayCourses = allCourses
+        .filter(c => c.curriculumndate.includes(weekday) && isCourseActiveOnDate(c, targetDate, weekday))
+        .sort((a, b) => a.curriculumtime.localeCompare(b.curriculumtime, 'zh-CN'))
+
+      const courses: WeeklyCourseView[] = dayCourses.map(c => {
+        const [startTime, endTime] = c.curriculumtime.split('-')
+        return {
+          name: c.curriculumname,
+          startTime: startTime ?? '',
+          endTime: endTime ?? '',
+          location: c.location ?? '',
+          teacher: (c as any).teacher ?? '',
+          rescheduled: (c as any).rescheduled ?? false,
+          originalDate: (c as any).originalDate ?? '',
+        }
+      })
+
+      days.push({ label: weekdayLabels[d - 1], date: dateStr, isToday, isHoliday, holidayName, isWorkdayOnWeekend, courses })
+    }
+
+    const monDate = calculateDateFromWeekAndDay(semesterStart, week, 1)
+    const sunDate = calculateDateFromWeekAndDay(semesterStart, week, 7)
+    let dateRange = ''
+    if (monDate && sunDate) {
+      dateRange = `${monDate.toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })} - ${sunDate.toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })}`
+    }
+
+    const username = allCourses[0]?.username ?? `用户 ${userid}`
+    this.log('[schedule] renderWeeklySchedule, 周数=', week, '用户=', userid)
+    return this.imageGenerator.renderWeeklySchedule(username, week, dateRange, days)
+  }
+
+  private getSemesterStart(courses: CourseRecord[]): string {
+    let earliest = courses[0]?.startDate ?? toIsoDate(new Date())
+    for (const c of courses) {
+      if (c.startDate < earliest) earliest = c.startDate
+    }
+    return earliest
   }
 
   private pickRepresentativeCourse(courses: CourseRecord[], dayOffset: number) {

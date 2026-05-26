@@ -5,6 +5,7 @@ import { registerBindCommand } from './commands/bind'
 import { registerGroupCommand } from './commands/group'
 import { registerRankingCommand } from './commands/ranking'
 import { registerShowCommand } from './commands/show'
+import { registerWeekCommand } from './commands/week'
 import { IcsFileService } from './services/ics-file'
 import { IcsWatcher } from './services/ics-watcher'
 
@@ -20,6 +21,7 @@ export interface Config {
   showCommand: string
   groupCommand: string
   rankingCommand: string
+  weekCommand: string
   renderWaitUntil: 'load' | 'domcontentloaded' | 'networkidle0' | 'networkidle2'
   verboseConsoleLog: boolean
   icsTempDir: string
@@ -34,6 +36,7 @@ export const Config: Schema<Config> = Schema.intersect([
     showCommand: Schema.string().default('查看').description('查看个人课表命令名'),
     groupCommand: Schema.string().default('群课表').description('查看群友课表命令名'),
     rankingCommand: Schema.string().default('排行').description('查看本周排行命令名'),
+    weekCommand: Schema.string().default('周课表').description('查看周课表命令名'),
   }).description('⚙️ 指令设置'),
 
   Schema.object({
@@ -68,6 +71,7 @@ export function apply(ctx: Context, config: Config) {
     registerShowCommand(ctx, config, services)
     registerGroupCommand(ctx, config, services)
     registerRankingCommand(ctx, config, services)
+    registerWeekCommand(ctx, config, services)
   })
 
   ctx.on('dispose', () => {
