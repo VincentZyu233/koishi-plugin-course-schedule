@@ -2,6 +2,8 @@
 
 # koishi-plugin-course-schedule
 
+📚📅 课程表插件，支持 WakeUp/星链/拾光 等课程表，ICS/JSON 等多格式导入，渲染为图片输出个人课表、群课表、周课表和排行榜 🎓🖼️✨
+
 > 💡 readme 中的图片请前往 [GitHub](https://github.com/VincentZyu233/koishi-plugin-course-schedule) 或 [Gitee](https://gitee.com/vincent-zyu/koishi-plugin-course-schedule) 主页查看。
 
 [![npm](https://img.shields.io/npm/v/koishi-plugin-course-schedule?style=flat-square)](https://www.npmjs.com/package/koishi-plugin-course-schedule)
@@ -62,7 +64,7 @@
 
 > 命令名称可在插件配置中自定义。
 
-> ⚠️ **兼容性说明**（更新于 2026-05-27，可能有时效性）
+#### ⚠️ **兼容性说明**（更新于 2026-05-27，可能有时效性）
 >
 > ![三个课程表app图标.星链.拾光.WakeUp.png](docs/images/三个课程表app图标.星链.拾光.WakeUp.png)
 >
