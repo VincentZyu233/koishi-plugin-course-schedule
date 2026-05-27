@@ -5,13 +5,21 @@ import type { CourseScheduleServices } from '../services'
 import { parseDayOffset } from '../utils/date'
 
 export function registerGroupCommand(ctx: Context, config: Config, services: CourseScheduleServices) {
-  ctx.command(`${config.baseCommand}.${config.groupCommand} [day:text]`, `获取本群所有群u某天的全部课程`)
+  ctx.command(`${config.baseCommand}.${config.groupCommand} [day:text]`, `👥 获取本群所有群u某天的全部课程`)
     .action(async ({ session }, day) => {
       const dayOffset = parseDayOffset(day)
+      const doQuote = config.enableQuote ? h.quote(session.messageId) : ''
       services.log('[group] 频道=', session.channelId, 'dayOffset=', dayOffset)
+
+      const waitingHintMsgId = config.enableWatingHint
+        ? (await session.send(`${doQuote}👥 正在渲染群课表，请稍候... ⏳`))[0]
+        : null
+
       const img = await services.scheduleService.renderChannelSchedule(session.channelId, dayOffset)
       services.log('[group] 渲染结果:', img ? '成功' : '无数据')
-      const quote = config.enableQuote ? h.quote(session.messageId) : ''
-      return img ? [quote, img] : `${quote}当前群组没有可渲染的课程数据。`
+
+      waitingHintMsgId && session.bot.deleteMessage(session.channelId, waitingHintMsgId).catch(() => {})
+
+      return img ? [doQuote, img] : `${doQuote}当前群组没有可渲染的课程数据。`
     })
 }

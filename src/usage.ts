@@ -57,6 +57,43 @@ export const usage = `
   <tr><td><code>课表.周课表 [周数]</code></td><td>查看个人周课表纵览</td><td><code>课表.周课表 12</code></td></tr>
 </table>
 
+<blockquote>
+<p><b>⚠️ 兼容性说明</b>（更新于 2026-05-27，可能有时效性）</p>
+
+<p><img src="https://gitee.com/vincent-zyu/koishi-plugin-course-schedule/raw/main/docs/images/%E4%B8%89%E4%B8%AA%E8%AF%BE%E7%A8%8B%E8%A1%A8app%E5%9B%BE%E6%A0%87.%E6%98%9F%E9%93%BE.%E6%8B%BE%E5%85%89.WakeUp.png" alt="三个课程表app图标" width="400"></p>
+
+<ul>
+  <li>
+    <b>WakeUp 课程表</b> — 旧版安卓 App 使用 v1 API（无鉴权），新版使用 v2 API（有鉴权）。<i>对于作者自己的学校教务网站</i>：
+    <ul>
+      <li>WakeUp 的课表导入很顺利</li>
+      <li>但口令导出功能在最新版 App 中不可用，需要降级到旧版本</li>
+      <li>据说 <b>≥ 6.1.x 的版本均不行，6.0.x 及以下版本可以</b></li>
+      <li>作者暂时不清楚新旧版本的确切分水岭，推测大概率是 <b>6.0.x 与 6.1.x</b> 之间</li>
+    </ul>
+    <p>因此在不同的导入方案中，<b>最佳选择是降级 WakeUp 到作者同款版本</b>（作者实测确认可用）：<br>
+    作者使用的版本：<b>6.0.23</b></p>
+    <p>
+      <a href="https://github.com/VincentZyuApps/koishi-plugin-course-schedule/releases/download/WakeUp6.0.23/WakeUp_6.0.23.apk" target="_blank">
+        <img src="https://img.shields.io/badge/Release_APK-GitHub-181717?style=flat-square&logo=github" alt="GitHub Release APK">
+      </a>
+      &nbsp;
+      <a href="https://gitee.com/vincent-zyu/koishi-plugin-course-schedule/releases/download/WakeUp6.0.23/WakeUp_6.0.23.apk" target="_blank">
+        <img src="https://img.shields.io/badge/Release_APK-Gitee-C71D23?style=flat-square&logo=gitee" alt="Gitee Release APK">
+      </a>
+    </p>
+  </li>
+  <li>
+    <b>星链课表</b> — <i>对于作者自己的学校教务网站</i>：没有直接的学校教务导入选项，通用的 AI 导入工具也无法使用。作者目前的导入方式：浏览器 F12 下载课表 HTML 数据 → 让 AI（如 OpenCode / Codex / Gemini）参考本地 HTML 结构与课表截图识别，生成符合星链 JSON 格式的文件 → 复制 JSON → 星链 App 右上角「+」→ 一键导课 → 粘贴 JSON → 点击 AI 解析即可完成导入。
+  </li>
+  <li>
+    <b>拾光课程表</b> — 作者暂时无法成功导入
+  </li>
+</ul>
+
+<p>如果你遇到了导入问题，欢迎加群反馈，帮助逐步完善适配 🙏 艾特作者回复更快哦~ @VincentZyu</p>
+</blockquote>
+
 <h3>🖼️ 渲染方式</h3>
 <p>基于 <b>Puppeteer</b> 将 HTML 模板渲染为图片输出，支持自定义渲染等待策略和字体文件。</p>
 
@@ -83,5 +120,4 @@ export const usage = `
 
 <hr>
 
-<p><b>Koishi 插件：course-schedule</b> — 课程表，群u在上什么课捏</p>
-`
+`;

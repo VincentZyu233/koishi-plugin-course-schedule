@@ -18,7 +18,7 @@ export const defaultColors: RenderColors = {
 }
 
 export const RenderColorsSchema = Schema.object({
-  primaryColor: Schema.string().role('color').default('#52449e').description('🎨 主题色（左侧装饰竖线、周课表标题下划线）'),
+  primaryColor: Schema.string().role('color').default('#52449e').description('🎨 主题色（左侧装饰竖线）'),
   cardBgColor: Schema.string().role('color').default('#E3F2FD').description('📋 个人课表卡片背景色'),
   statusOngoingColor: Schema.string().role('color').default('#D32F2F').description('🔴 进行中状态标签色'),
   statusNextColor: Schema.string().role('color').default('#1976D2').description('🔵 下一节状态标签色'),
@@ -28,6 +28,7 @@ export const RenderColorsSchema = Schema.object({
 export interface Config {
   // 💬 消息设置
   enableQuote: boolean
+  enableWatingHint: boolean
 
   // ⚙️ 指令设置
   baseCommand: string
@@ -57,12 +58,13 @@ export const Config: Schema<Config> = Schema.intersect([
   // 💬 消息设置
   Schema.object({
     enableQuote: Schema.boolean().default(true).description('💬 开启后，本插件发送的所有消息都会引用回复触发指令的消息'),
+    enableWatingHint: Schema.boolean().default(true).description('⏳ 是否启用「渲染中，请稍候...」提示消息'),
   }).description('💬 消息设置'),
 
   // ⚙️ 指令设置
   Schema.object({
     baseCommand: Schema.string().default('课表').description('父级指令名称'),
-    __split__: Schema.string().disabled().default('上面是父级指令，下面是字指令').description('_____上面是父级指令，下面是字指令_____'),
+    __split__: Schema.string().disabled().default('上面是父级指令，下面是字指令').description('_____————上面是父级指令，下面是字指令————_____'),
     bindCommand: Schema.string().default('绑定').description('绑定课表命令名'),
     showCommand: Schema.string().default('查看').description('查看个人课表命令名'),
     groupCommand: Schema.string().default('群课表').description('查看群友课表命令名'),

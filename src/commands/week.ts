@@ -4,7 +4,7 @@ import type { Config } from '../config'
 import type { CourseScheduleServices } from '../services'
 
 export function registerWeekCommand(ctx: Context, config: Config, services: CourseScheduleServices) {
-  ctx.command(`${config.baseCommand}.${config.weekCommand} [week:text]`, `获取某人某个周的全部课程`)
+  ctx.command(`${config.baseCommand}.${config.weekCommand} [week:text]`, `📅 获取某人某个周的全部课程`)
     .action(async ({ session }, week) => {
       let weekNumber: number | undefined
       if (week) {
@@ -23,17 +23,22 @@ export function registerWeekCommand(ctx: Context, config: Config, services: Cour
         }
       }
 
-      services.log('[week] 频道=', session.channelId, '用户=', session.userId, 'week=', week)
-
-      const quote = config.enableQuote ? h.quote(session.messageId) : ''
+      const doQuote = config.enableQuote ? h.quote(session.messageId) : ''
 
       if (weekNumber === -1 || weekNumber === -2) {
-        return `${quote}上周/下周功能需要记录学期开始日期，暂未实现。请使用 "课表.周课表 5" 指定周数。`
+        return `${doQuote}上周/下周功能需要记录学期开始日期，暂未实现。请使用 "课表.周课表 5" 指定周数。`
       }
+
+      const waitingHintMsgId = config.enableWatingHint
+        ? (await session.send(`${doQuote}📅 正在渲染周课表，请稍候... ⏳`))[0]
+        : null
 
       const img = await services.scheduleService.renderWeeklySchedule(session.channelId, session.userId, weekNumber)
       services.log('[week] 渲染结果:', img ? '成功' : '无数据')
-      if (typeof img === 'string') return `${quote}${img}`
-      return img ? [quote, img] : `${quote}当前没有可渲染的课程数据。`
+
+      waitingHintMsgId && session.bot.deleteMessage(session.channelId, waitingHintMsgId).catch(() => {})
+
+      if (typeof img === 'string') return `${doQuote}${img}`
+      return img ? [doQuote, img] : `${doQuote}当前没有可渲染的课程数据。`
     })
 }

@@ -2,24 +2,15 @@
 
 # koishi-plugin-course-schedule
 
+> 💡 readme 中的图片请前往 [GitHub](https://github.com/VincentZyu233/koishi-plugin-course-schedule) 或 [Gitee](https://gitee.com/vincent-zyu/koishi-plugin-course-schedule) 主页查看。
 
-<p>
-  <a href="https://www.npmjs.com/package/koishi-plugin-course-schedule" target="_blank">
-    <img src="https://img.shields.io/npm/v/koishi-plugin-course-schedule?style=flat-square" alt="npm version">
-  </a>
-  <a href="https://www.npmjs.com/package/koishi-plugin-course-schedule" target="_blank">
-    <img src="https://img.shields.io/npm/dm/koishi-plugin-course-schedule?style=flat-square" alt="npm downloads">
-  </a>
-  <a href="https://github.com/VincentZyu233/koishi-plugin-course-schedule" target="_blank">
-    <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
-  </a>
-  <a href="https://gitee.com/vincent-zyu/koishi-plugin-course-schedule" target="_blank">
-    <img src="https://img.shields.io/badge/Gitee-C71D23?style=for-the-badge&logo=gitee&logoColor=white" alt="Gitee">
-  </a>
-  <a href="https://qm.qq.com/q/ZN7fxZ3qCq" target="_blank">
-    <img src="https://img.shields.io/badge/QQ群-1085190201-1AAD19?style=flat-square" alt="QQ群">
-  </a>
-</p>
+[![npm](https://img.shields.io/npm/v/koishi-plugin-course-schedule?style=flat-square)](https://www.npmjs.com/package/koishi-plugin-course-schedule)
+[![npm-download](https://img.shields.io/npm/dm/koishi-plugin-course-schedule?style=flat-square)](https://www.npmjs.com/package/koishi-plugin-course-schedule)
+
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/VincentZyu233/koishi-plugin-course-schedule)
+[![Gitee](https://img.shields.io/badge/Gitee-C71D23?style=for-the-badge&logo=gitee&logoColor=white)](https://gitee.com/vincent-zyu/koishi-plugin-course-schedule)
+
+[![QQ群](https://img.shields.io/badge/QQ群-1085190201-1AAD19?style=flat-square)](https://qm.qq.com/q/ZN7fxZ3qCq)
 
 <p><del>💬 插件使用问题 / 🐛 Bug反馈 / 👨‍💻 插件开发交流，欢迎加入QQ群：<b>259248174</b> 🎉（这个群G了）</del></p>
 <p>💬 插件使用问题 / 🐛 Bug反馈 / 👨‍💻 插件开发交流，欢迎加入新QQ群：<b>1085190201</b> 🎉</p>
@@ -36,16 +27,16 @@
 ## 📸 效果预览
 
 **个人课表** — 查看自己某天的全部课程
-![个人课表](https://gitee.com/vincent-zyu/koishi-plugin-course-schedule/raw/main/docs/images/preview.%E8%AF%BE%E8%A1%A8.%E6%9F%A5%E7%9C%8B.png)
+![个人课表](docs/images/preview.课表.查看.png)
 
 **群课表** — 查看本群所有人某天的课程
-![群课表](https://gitee.com/vincent-zyu/koishi-plugin-course-schedule/raw/main/docs/images/preview.%E8%AF%BE%E8%A1%A8.%E7%BE%A4%E8%AF%BE%E8%A1%A8.png)
+![群课表](docs/images/preview.课表.群课表.png)
 
 **本周排行** — 查看本周本群上课时长排行榜
-![本周排行](https://gitee.com/vincent-zyu/koishi-plugin-course-schedule/raw/main/docs/images/preview.%E8%AF%BE%E8%A1%A8.%E6%8E%92%E8%A1%8C.png)
+![本周排行](docs/images/preview.课表.排行.png)
 
 **周课表** — 查看个人周课表纵览
-![周课表](https://gitee.com/vincent-zyu/koishi-plugin-course-schedule/raw/main/docs/images/preview.%E8%AF%BE%E8%A1%A8.%E5%91%A8%E8%AF%BE%E8%A1%A8.png)
+![周课表](docs/images/preview.课表.周课表.png)
 
 ## ✨ 功能
 
@@ -70,6 +61,25 @@
 ```
 
 > 命令名称可在插件配置中自定义。
+
+> ⚠️ **兼容性说明**（更新于 2026-05-27，可能有时效性）
+>
+> ![三个课程表app图标.星链.拾光.WakeUp.png](docs/images/三个课程表app图标.星链.拾光.WakeUp.png)
+>
+> - **WakeUp 课程表** — 旧版安卓 App 使用 v1 API（无鉴权），新版使用 v2 API（有鉴权）。_对于作者自己的学校教务网站_：
+>   - WakeUp 的课表导入很顺利
+>   - 但口令导出功能在最新版 App 中不可用，需要降级到旧版本
+>   - 据说 **≥ 6.1.x 的版本均不行，6.0.x 及以下版本可以**
+>   - 作者暂时不清楚新旧版本的确切分水岭，推测大概率是 **6.0.x 与 6.1.x** 之间
+>
+>   因此在不同的导入方案中，**最佳选择是降级 WakeUp 到作者同款版本**（作者实测确认可用）：
+>   作者使用的版本：**6.0.23**
+>   - [![Release APK - GitHub](https://img.shields.io/badge/Release_APK-GitHub-181717?style=flat-square&logo=github)](https://github.com/VincentZyuApps/koishi-plugin-course-schedule/releases/download/WakeUp6.0.23/WakeUp_6.0.23.apk)
+>   - [![Release APK - Gitee](https://img.shields.io/badge/Release_APK-Gitee-C71D23?style=flat-square&logo=gitee)](https://gitee.com/vincent-zyu/koishi-plugin-course-schedule/releases/download/WakeUp6.0.23/WakeUp_6.0.23.apk)
+> - **星链课表** — _对于作者自己的学校教务网站_：没有直接的学校教务导入选项，通用的 AI 导入工具也无法使用。作者目前的导入方式：浏览器 F12 下载课表 HTML 数据 → 让 AI（如 OpenCode / Codex / Gemini）参考本地 HTML 结构与课表截图识别，生成符合星链 JSON 格式的文件 → 复制 JSON → 星链 App 右上角「+」→ 一键导课 → 粘贴 JSON → 点击 AI 解析即可完成导入。
+> - **拾光课程表** — 作者暂时无法成功导入
+>
+> 如果你遇到了导入问题，欢迎加群反馈，帮助逐步完善适配 🙏 艾特作者回复更快哦~ @VincentZyu
 
 ### 🖼️ 渲染方式
 
@@ -102,19 +112,26 @@ yarn add koishi-plugin-course-schedule
 
 | 配置项 | 默认值 | 说明 |
 |--------|--------|------|
+| `enableQuote` | `true` | 💬 开启后，所有消息都会引用回复触发指令的消息 |
+| `enableWatingHint` | `true` | ⏳ 是否启用「渲染中，请稍候...」提示消息 |
 | `baseCommand` | `课表` | 父级指令名称 |
+| `bindCommand` | `绑定` | 绑定课表命令名 |
+| `showCommand` | `查看` | 查看个人课表命令名 |
+| `groupCommand` | `群课表` | 查看群友课表命令名 |
+| `rankingCommand` | `排行` | 查看本周排行命令名 |
+| `weekCommand` | `周课表` | 查看周课表命令名 |
 | `renderWaitUntil` | `load` | Puppeteer 渲染等待策略 |
 | `textFontPath` | `(空)` | 自定义字体文件路径 |
+| `icsTempDir` | `path.resolve(__dirname, '..', 'tmp')` | ICS 临时文件目录（需要填写绝对路径，默认值是插件目录下的`tmp`文件夹） |
+| `icsTempDeleteTime` | `300` | 临时文件自动删除时间（秒），`0`或`负数`表示永不删除 |
 | `renderColors.primaryColor` | `#52449e` | 主题色 |
 | `renderColors.cardBgColor` | `#E3F2FD` | 个人课表卡片背景色 |
 | `renderColors.statusOngoingColor` | `#D32F2F` | 进行中标签色 |
 | `renderColors.statusNextColor` | `#1976D2` | 下一节标签色 |
 | `renderColors.statusFinishedColor` | `#388E3C` | 已结束标签色 |
-| `icsTempDir` | `./tmp` | ICS 临时文件目录 |
-| `icsTempDeleteTime` | `300` | 临时文件自动删除时间（秒） |
 | `verboseConsoleLog` | `false` | 详细调试日志 |
 
-## 🔗 链接
+## 🔗 本插件链接
 
 - **GitHub**: https://github.com/VincentZyu233/koishi-plugin-course-schedule
 - **Gitee**: https://gitee.com/vincent-zyu/koishi-plugin-course-schedule
@@ -130,7 +147,7 @@ yarn add koishi-plugin-course-schedule
 
 | 项目 | 许可证 |
 |------|--------|
-| [astrbot_plugin_CourseSchedule](https://github.com/advent259141/astrbot_plugin_CourseSchedule) | AGPL v3 |
-| [nonebot-plugin-course-schedule](https://github.com/GLDYM/nonebot-plugin-course-schedule) | AGPL v3 |
-| [Yunzai-Schedule-Plugin](https://github.com/Temmie0125/Yunzai-Schedule-Plugin) | GPL v3 |
-| [【koishi-shangxue-plugins】curriculum-table](https://github.com/koishi-shangxue-plugins/koishi-shangxue-apps/tree/main/plugins/curriculum-table) | MIT |
+| [![GitHub](https://img.shields.io/badge/-181717?style=flat-square&logo=github)](https://github.com/advent259141/astrbot_plugin_CourseSchedule) [astrbot_plugin_CourseSchedule](https://github.com/advent259141/astrbot_plugin_CourseSchedule) | AGPL v3 |
+| [![GitHub](https://img.shields.io/badge/-181717?style=flat-square&logo=github)](https://github.com/GLDYM/nonebot-plugin-course-schedule) [nonebot-plugin-course-schedule](https://github.com/GLDYM/nonebot-plugin-course-schedule) | AGPL v3 |
+| [![GitHub](https://img.shields.io/badge/-181717?style=flat-square&logo=github)](https://github.com/Temmie0125/Yunzai-Schedule-Plugin) [Yunzai-Schedule-Plugin](https://github.com/Temmie0125/Yunzai-Schedule-Plugin) | GPL v3 |
+| [![GitHub](https://img.shields.io/badge/-181717?style=flat-square&logo=github)](https://github.com/koishi-shangxue-plugins/koishi-shangxue-apps/tree/main/plugins/curriculum-table) [【koishi-shangxue-plugins】curriculum-table](https://github.com/koishi-shangxue-plugins/koishi-shangxue-apps/tree/main/plugins/curriculum-table) | MIT |

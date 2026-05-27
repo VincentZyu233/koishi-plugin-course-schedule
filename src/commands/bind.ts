@@ -17,7 +17,7 @@ export function registerBindCommand(
   ctx: Context, config: Config, services: CourseScheduleServices,
   icsFileService: IcsFileService, icsWatcher: IcsWatcher,
 ) {
-  ctx.command(`${config.baseCommand}.${config.bindCommand} [text:text]`, `导入课表捏`)
+  ctx.command(`${config.baseCommand}.${config.bindCommand} [text:text]`, `📥 导入课表捏`)
     .example(`${config.baseCommand}.${config.bindCommand} 这是来自「WakeUp课程表」的课表分享......分享口令为「xxxxxxxx」`)
     .example(`${config.baseCommand}.${config.bindCommand} https://example.com/course.ics`)
     .action(async ({ session }, text) => {
@@ -73,8 +73,8 @@ export function registerBindCommand(
             sourceText = await icsFileService.readFile(localPath)
           } else {
             services.log('[bind] 交互式等待超时')
-            const quote = config.enableQuote ? h.quote(session.messageId) : ''
-            return `${quote}操作超时，请重新绑定。`
+            const doQuote = config.enableQuote ? h.quote(session.messageId) : ''
+            return `${doQuote}操作超时，请重新绑定。`
           }
         }
       }
@@ -82,8 +82,8 @@ export function registerBindCommand(
       const courses = await parseSourceText(sourceText, fileName, session.channelId, targetUser, services, ctx)
       if (!courses.length) {
         services.log('[bind] 解析结果为空，无法导入')
-        const quote = config.enableQuote ? h.quote(session.messageId) : ''
-        return `${quote}没有解析出可导入课程。请检查格式是否正确。`
+        const doQuote = config.enableQuote ? h.quote(session.messageId) : ''
+        return `${doQuote}没有解析出可导入课程。请检查格式是否正确。`
       }
 
       services.log('[bind] 开始写入数据库, 频道=', session.channelId, '用户=', session.userId)
@@ -98,8 +98,8 @@ export function registerBindCommand(
       }
       services.log('[bind] 写入完成, 共', courses.length, '门课程')
 
-      const quote = config.enableQuote ? h.quote(session.messageId) : ''
-      return [quote, `已导入 ${courses.length} 门课程。`]
+      const doQuote = config.enableQuote ? h.quote(session.messageId) : ''
+      return [doQuote, `✅ 已导入 ${courses.length} 门课程。`]
     })
 }
 
