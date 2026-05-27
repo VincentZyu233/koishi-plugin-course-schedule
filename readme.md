@@ -1,6 +1,7 @@
+![koishi-plugin-course-schedule](https://socialify.git.ci/VincentZyuApps/koishi-plugin-course-schedule/image?custom_description=%F0%9F%93%9A%F0%9F%93%85+%E8%AF%BE%E7%A8%8B%E8%A1%A8%E6%8F%92%E4%BB%B6%EF%BC%8C%E6%94%AF%E6%8C%81+WakeUp+%2F+%E6%98%9F%E9%93%BE+%2F+%E6%8B%BE%E5%85%89+%2F+ICS+%E5%A4%9A%E6%A0%BC%E5%BC%8F%E5%AF%BC%E5%85%A5%EF%BC%8C%E6%B8%B2%E6%9F%93%E4%B8%BA%E5%9B%BE%E7%89%87%E8%BE%93%E5%87%BA%E4%B8%AA%E4%BA%BA%E8%AF%BE%E8%A1%A8%E3%80%81%E7%BE%A4%E8%AF%BE%E8%A1%A8%E3%80%81%E5%91%A8%E8%AF%BE%E8%A1%A8%E5%92%8C%E6%8E%92%E8%A1%8C%E6%A6%9C+%F0%9F%8E%93%F0%9F%96%BC%EF%B8%8F%E2%9C%A8&description=1&font=Bitter&forks=1&issues=1&language=1&logo=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Ff%2Ff3%2FKoishi.js_Logo.png%3F_%3D20230331182243&name=1&owner=1&pulls=1&stargazers=1&theme=Auto)
+
 # koishi-plugin-course-schedule
 
-[![Socialify](https://socialify.git.ci/VincentZyu233/koishi-plugin-course-schedule/image?custom_description=%E8%AF%BE%E7%A8%8B%E8%A1%A8%EF%BC%8C%E7%BE%A4u%E5%9C%A8%E4%B8%8A%E4%BB%80%E4%B9%88%E8%AF%BE%E6%8D%8F&description=1&font=Bitter&forks=1&issues=1&language=1&logo=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Ff%2Ff3%2FKoishi.js_Logo.png&name=1&owner=1&pattern=Plus&stargazers=1&theme=Auto)](https://gitee.com/vincent-zyu/koishi-plugin-course-schedule)
 
 <p>
   <a href="https://www.npmjs.com/package/koishi-plugin-course-schedule" target="_blank">
@@ -31,6 +32,13 @@
 课程表，**群u在上什么课捏**？
 
 支持多种课表格式导入，自动渲染为图片输出，帮助群友互相了解彼此的课程安排。
+
+## 📸 效果预览
+
+![个人课表](docs/images/preview.课表.查看.png)
+![群课表](docs/images/preview.课表.群课表.png)
+![本周排行](docs/images/preview.课表.排行.png)
+![周课表](docs/images/preview.课表.周课表.png)
 
 ## ✨ 功能
 
@@ -69,10 +77,18 @@
 
 ## 📦 安装
 
-在 Koishi 插件市场搜索 `course-schedule` 即可安装，或使用 npm：
+在 Koishi 插件市场搜索 `course-schedule` 即可安装
+
+或使用 npm / yarn：
 
 ```bash
+# 先切换到koishi的根目录
+cd /path/to/koishi-app
+ls
+# 确保能看到 package.json, koishi.yml, data文件夹
 npm install koishi-plugin-course-schedule
+# 或者用yarn
+yarn add koishi-plugin-course-schedule
 ```
 
 ## ⚙️ 配置
@@ -110,4 +126,4 @@ npm install koishi-plugin-course-schedule
 | [astrbot_plugin_CourseSchedule](https://github.com/advent259141/astrbot_plugin_CourseSchedule) | AGPL v3 |
 | [nonebot-plugin-course-schedule](https://github.com/GLDYM/nonebot-plugin-course-schedule) | AGPL v3 |
 | [Yunzai-Schedule-Plugin](https://github.com/Temmie0125/Yunzai-Schedule-Plugin) | GPL v3 |
-| [curriculum-table](https://github.com/koishi-shangxue-plugins/koishi-shangxue-apps/tree/main/plugins/curriculum-table) | MIT |
+| [【koishi-shangxue-plugins】curriculum-table](https://github.com/koishi-shangxue-plugins/koishi-shangxue-apps/tree/main/plugins/curriculum-table) | MIT |
