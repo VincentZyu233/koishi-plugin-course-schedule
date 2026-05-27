@@ -49,7 +49,7 @@ export function registerBindCommand(
 
       if (!sourceText) {
         services.log('[bind] 无直接参数，进入交互式等待')
-        await session.send('请发送 WakeUp 分享文本、ICS 文本、课表 JSON，或附带 .ics/.json/.wakeup_schedule 文件。')
+        await session.send(config.bindPromptText)
         const promptResult = await (session as any).prompt(60000)
 
         if (promptResult) {

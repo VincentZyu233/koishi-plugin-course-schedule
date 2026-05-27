@@ -29,6 +29,7 @@ export interface Config {
   // 💬 消息设置
   enableQuote: boolean
   enableWatingHint: boolean
+  bindPromptText: string
 
   // ⚙️ 指令设置
   baseCommand: string
@@ -59,6 +60,7 @@ export const Config: Schema<Config> = Schema.intersect([
   Schema.object({
     enableQuote: Schema.boolean().default(true).description('💬 开启后，本插件发送的所有消息都会引用回复触发指令的消息'),
     enableWatingHint: Schema.boolean().default(true).description('⏳ 是否启用「渲染中，请稍候...」提示消息'),
+    bindPromptText: Schema.string().default('📥 请发送 WakeUp 分享文本、ICS 文本、课表 JSON，或附带 .ics/.json/.wakeup_schedule 文件。\n\n⚠️ 注意：WakeUp 课程表高版本已对 API 加强限制 🔒，版本号高于 6.1.x 的 WakeUp 课程表无法通过分享口令绑定。\n\n🔧 推荐降级到作者同款版本 6.0.23 ⬇️：\nhttps://gitee.com/vincent-zyu/koishi-plugin-course-schedule/releases/download/WakeUp6.0.23/WakeUp_6.0.23.apk').role('textarea', { rows: [3, 10] }).description('📝 绑定指令触发交互式等待时发送的提示文本（支持换行）'),
   }).description('💬 消息设置'),
 
   // ⚙️ 指令设置
