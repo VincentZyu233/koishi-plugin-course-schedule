@@ -9,6 +9,13 @@ function esc(v: string) {
 
 function ff(name: string) { return name ? `'${name}',` : '' }
 
+function renderFooter(footerText: string, timestamp: string): string {
+  const parts: string[] = []
+  if (timestamp) parts.push(`<div class="ft">生成时间: ${esc(timestamp)}</div>`)
+  if (footerText) parts.push(`<div class="ff">${esc(footerText)}</div>`)
+  return parts.length ? `<div class="fw">${parts.join('\n')}</div>` : ''
+}
+
 function makeStatus(colors: RenderColors) {
   return {
     ongoing: { label: '进行中', bg: colors.statusOngoingColor, fg: '#FFFFFF' },
@@ -18,7 +25,7 @@ function makeStatus(colors: RenderColors) {
   }
 }
 
-export function renderGroupScheduleTemplate(items: DayCourseView[], title: string, fontName = '', colors: RenderColors = defaultColors, logFn?: (...args: unknown[]) => void) {
+export function renderGroupScheduleTemplate(items: DayCourseView[], title: string, fontName = '', colors: RenderColors = defaultColors, logFn?: (...args: unknown[]) => void, footerText = '', timestamp = '') {
   const S = makeStatus(colors)
   if (logFn) logFn('[template] 群课表模板渲染: 共', items.length, '个 item')
   const rows = items.map((item, idx) => {
@@ -41,12 +48,12 @@ export function renderGroupScheduleTemplate(items: DayCourseView[], title: strin
       </div>
     </div>`
   }).join('')
-
+  const footerHtml = renderFooter(footerText, timestamp)
   return `<!doctype html>
 <html><head><meta charset="utf-8"><style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{width:1200px;background:#FFF;font-family:${ff(fontName)}"Microsoft YaHei","PingFang SC",sans-serif;overflow:hidden}
-.w{width:1200px;position:relative;min-height:${40 + 120 + items.length * 120 + 80}px}
+.w{width:1200px;position:relative;min-height:${40 + 120 + items.length * 120 + 80 + (footerHtml ? 50 : 0)}px}
 .ac{position:absolute;left:40px;top:40px;width:20px;height:60px;background:${colors.primaryColor};border-radius:0 4px 4px 0}
 .tl{position:absolute;left:80px;top:40px;font-size:48px;font-weight:700;color:#000;white-space:nowrap}
 .ul{position:absolute;left:80px;top:110px;width:300px;height:5px;background:#E0E0E0;border-radius:3px}
@@ -59,16 +66,20 @@ body{width:1200px;background:#FFF;font-family:${ff(fontName)}"Microsoft YaHei","
 .bd{font-size:24px;font-weight:700;padding:2px 10px;white-space:nowrap;border-radius:3px}
 .su{font-size:24px;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:950px}
 .ti{font-size:24px;color:#888;white-space:nowrap}
+.fw{position:absolute;left:40px;bottom:20px;color:#888}
+.ft{font-size:20px}
+.ff{margin-top:4px;font-size:12px;white-space:pre-line}
 </style></head><body>
 <div class="w">
   <div class="ac"></div>
   <div class="tl">${esc(title)}</div>
   <div class="ul"></div>
   ${rows || '<div style="position:absolute;left:40px;top:160px;font-size:28px;color:#888">暂无课程</div>'}
+  ${footerHtml}
 </div></body></html>`
 }
 
-export function renderPersonalScheduleTemplate(items: DayCourseView[], title: string, footer: string, fontName = '', colors: RenderColors = defaultColors) {
+export function renderPersonalScheduleTemplate(items: DayCourseView[], title: string, timestamp: string, fontName = '', colors: RenderColors = defaultColors, footerText = '') {
   const cards = items.map(item => {
     const lines = [item.courseName, item.location].filter(Boolean)
     const extra = [item.startTime && item.endTime ? `${item.startTime}-${item.endTime}` : '', item.statusDetail].filter(Boolean).join(' ')
@@ -79,7 +90,7 @@ export function renderPersonalScheduleTemplate(items: DayCourseView[], title: st
       ${extra ? `<div class="cl cm">${esc(extra)}</div>` : ''}
     </div>`
   }).join('')
-
+  const footerHtml = renderFooter(footerText, timestamp)
   return `<!doctype html>
 <html><head><meta charset="utf-8"><style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -89,15 +100,17 @@ body{width:1000px;background:#FFF;font-family:${ff(fontName)}"Microsoft YaHei","
 .ct{font-size:28px;font-weight:700;color:#000;margin-bottom:8px}
 .cl{font-size:22px;color:#333;margin-bottom:4px}
 .cl.cm{color:#888}
-.ft{margin-top:15px;font-size:22px;color:#888}
+.fw{margin-top:15px;color:#888}
+.ft{font-size:22px}
+.ff{margin-top:4px;font-size:14px;white-space:pre-line}
 </style></head><body>
 <div class="ht">${esc(title)}</div>
 ${cards || '<div class="cd"><div class="cl">暂无课程</div></div>'}
-<div class="ft">生成时间: ${esc(footer)}</div>
+${footerHtml}
 </body></html>`
 }
 
-export function renderRankingTemplate(items: RankingItem[], dateRange: string, fontName = '') {
+export function renderRankingTemplate(items: RankingItem[], dateRange: string, fontName = '', footerText = '', timestamp = '') {
   const rows = items.map((item, i) => {
     const r = i + 1
     const c = r === 1 ? '#FBBF24' : r === 2 ? '#9CA3AF' : r === 3 ? '#F59E0B' : '#374151'
@@ -111,7 +124,7 @@ export function renderRankingTemplate(items: RankingItem[], dateRange: string, f
       <div class="rs"><div class="rd">${h}h ${m}m</div><div class="rc">${item.courseCount} 节</div></div>
     </div>`
   }).join('')
-
+  const footerHtml = renderFooter(footerText, timestamp)
   return `<!doctype html>
 <html><head><meta charset="utf-8"><style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -126,9 +139,13 @@ body{width:1200px;background:#FFF;font-family:${ff(fontName)}"Microsoft YaHei","
 .rs{text-align:right;margin-right:20px}
 .rd{font-size:28px;color:#374151;font-weight:600}
 .rc{font-size:24px;color:#6B7280;margin-top:4px}
+.fw{margin-top:20px;color:#888}
+.ft{font-size:20px}
+.ff{margin-top:4px;font-size:12px;white-space:pre-line}
 </style></head><body>
 <div class="rt">本周上课排行榜</div>
 <div class="rsb">${esc(dateRange)}</div>
 ${rows || '<div style="font-size:28px;color:#888;margin-top:20px">本周暂无排行数据</div>'}
+${footerHtml}
 </body></html>`
 }

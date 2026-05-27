@@ -19,6 +19,7 @@ export class ImageGenerator {
   private fontBuffer: Buffer | null = null
   private verbose = false
   private colors: RenderColors
+  private footerText = ''
 
   constructor(
     private ctx: Context,
@@ -26,10 +27,12 @@ export class ImageGenerator {
     private waitUntil: 'load' | 'domcontentloaded' | 'networkidle0' | 'networkidle2' = 'load',
     verbose = false,
     colors?: RenderColors,
+    footerText = '',
   ) {
     this.fontPath = fontPath
     this.verbose = verbose
     this.colors = colors ?? defaultColors
+    this.footerText = footerText
     if (!fontPath) return
     try {
       if (!fs.existsSync(fontPath)) {
@@ -47,29 +50,34 @@ export class ImageGenerator {
   async renderPersonalSchedule(items: DayCourseView[], targetDate: Date) {
     this.log('[render] 个人课表, 课程数=', items.length)
     const title = `我的课表 · ${targetDate.toLocaleDateString('zh-CN')}`
-    const now = new Date()
-    const footer = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
-    return this.renderHtml(renderPersonalScheduleTemplate(items, title, footer, this.fontName, this.colors), '个人课表')
+    const timestamp = this.getTimestamp()
+    return this.renderHtml(renderPersonalScheduleTemplate(items, title, timestamp, this.fontName, this.colors, this.footerText), '个人课表')
   }
 
   async renderGroupSchedule(items: DayCourseView[], targetDate: Date) {
     this.log('[render] 群课表, 用户数=', items.length)
     const logFn = this.verbose ? (...args: unknown[]) => this.log('[render][verbose]', ...args) : undefined
-    const html = renderGroupScheduleTemplate(items, '群友在上什么课?', this.fontName, this.colors, logFn)
+    const timestamp = this.getTimestamp()
+    const html = renderGroupScheduleTemplate(items, '群友在上什么课?', this.fontName, this.colors, logFn, this.footerText, timestamp)
     this.log('[render] 群课表HTML已生成, length=', html.length)
     return this.renderHtml(html, '群课表')
   }
 
   async renderRanking(items: RankingItem[], dateRange: string) {
     this.log('[render] 排行, 人数=', items.length)
-    return this.renderHtml(renderRankingTemplate(items, dateRange, this.fontName), '排行')
+    const timestamp = this.getTimestamp()
+    return this.renderHtml(renderRankingTemplate(items, dateRange, this.fontName, this.footerText, timestamp), '排行')
   }
 
   async renderWeeklySchedule(nickname: string, week: number, dateRange: string, days: WeeklyDayView[]) {
     this.log('[render] 周课表, 周数=', week, '天数=', days.length)
+    const timestamp = this.getTimestamp()
+    return this.renderHtml(renderWeeklyScheduleTemplate(nickname, week, dateRange, days, timestamp, this.fontName, this.colors, this.footerText), '周课表')
+  }
+
+  private getTimestamp(): string {
     const now = new Date()
-    const updateTime = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
-    return this.renderHtml(renderWeeklyScheduleTemplate(nickname, week, dateRange, days, updateTime, this.fontName, this.colors), '周课表')
+    return `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
   }
 
   private log(...args: unknown[]) {

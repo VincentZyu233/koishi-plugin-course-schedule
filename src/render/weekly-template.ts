@@ -13,9 +13,10 @@ export function renderWeeklyScheduleTemplate(
   week: number,
   dateRange: string,
   days: WeeklyDayView[],
-  updateTime: string,
+  timestamp: string,
   fontName = '',
   colors: RenderColors = defaultColors,
+  footerText = '',
 ) {
   const dayBlocks = days.map((day) => {
     const holidayTag = day.isHoliday ? ` [${esc(day.holidayName)}]` : day.isWorkdayOnWeekend ? ` [${esc(day.holidayName)}]` : ''
@@ -34,6 +35,11 @@ export function renderWeeklyScheduleTemplate(
     return `<div class="db">${dayHeader}${courseItems || noCourses}</div>`
   }).join('')
 
+  const parts: string[] = []
+  if (timestamp) parts.push(`<div class="ft">生成时间: ${esc(timestamp)}</div>`)
+  if (footerText) parts.push(`<div class="ff">${esc(footerText)}</div>`)
+  const footerHtml = parts.length ? `<div class="fw">${parts.join('\n')}</div>` : ''
+
   return `<!doctype html>
 <html><head><meta charset="utf-8"><style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -48,12 +54,14 @@ body{width:1200px;background:#FFF;font-family:${ff(fontName)}"Microsoft YaHei","
 .cn{flex:0 0 240px;font-size:22px;font-weight:600;color:#333}
 .cf{flex:1;font-size:20px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .nc{padding:8px 0;font-size:20px;color:#888}
-.ft{margin-top:20px;font-size:20px;color:#888}
+.fw{margin-top:20px;color:#888}
+.ft{font-size:20px}
+.ff{margin-top:4px;font-size:12px;white-space:pre-line}
 </style></head><body>
 <div class="ac"></div>
 <div class="ht">${esc(nickname)} 的每周课表</div>
 <div class="sb">第 ${week} 周 · ${esc(dateRange)}</div>
 ${dayBlocks}
-<div class="ft">生成时间: ${esc(updateTime)}</div>
+${footerHtml}
 </body></html>`
 }
