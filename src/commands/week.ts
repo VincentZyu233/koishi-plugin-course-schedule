@@ -1,5 +1,5 @@
 import type { Context } from 'koishi'
-import type { Config } from '../index'
+import type { Config } from '../config'
 import type { CourseScheduleServices } from '../services'
 
 export function registerWeekCommand(ctx: Context, config: Config, services: CourseScheduleServices) {

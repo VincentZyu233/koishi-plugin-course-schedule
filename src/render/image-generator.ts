@@ -10,21 +10,26 @@ import {
 } from './template'
 import { renderWeeklyScheduleTemplate } from './weekly-template'
 import type { DayCourseView, RankingItem, WeeklyDayView } from '../types'
+import type { RenderColors } from '../config'
+import { defaultColors } from '../config'
 
 export class ImageGenerator {
   private fontPath = ''
   private fontName = ''
   private fontBuffer: Buffer | null = null
   private verbose = false
+  private colors: RenderColors
 
   constructor(
     private ctx: Context,
     fontPath: string,
     private waitUntil: 'load' | 'domcontentloaded' | 'networkidle0' | 'networkidle2' = 'load',
     verbose = false,
+    colors?: RenderColors,
   ) {
     this.fontPath = fontPath
     this.verbose = verbose
+    this.colors = colors ?? defaultColors
     if (!fontPath) return
     try {
       if (!fs.existsSync(fontPath)) {
@@ -44,13 +49,13 @@ export class ImageGenerator {
     const title = `我的课表 · ${targetDate.toLocaleDateString('zh-CN')}`
     const now = new Date()
     const footer = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
-    return this.renderHtml(renderPersonalScheduleTemplate(items, title, footer, this.fontName), '个人课表')
+    return this.renderHtml(renderPersonalScheduleTemplate(items, title, footer, this.fontName, this.colors), '个人课表')
   }
 
   async renderGroupSchedule(items: DayCourseView[], targetDate: Date) {
     this.log('[render] 群课表, 用户数=', items.length)
     const logFn = this.verbose ? (...args: unknown[]) => this.log('[render][verbose]', ...args) : undefined
-    const html = renderGroupScheduleTemplate(items, '群友在上什么课?', this.fontName, logFn)
+    const html = renderGroupScheduleTemplate(items, '群友在上什么课?', this.fontName, this.colors, logFn)
     this.log('[render] 群课表HTML已生成, length=', html.length)
     return this.renderHtml(html, '群课表')
   }
@@ -64,7 +69,7 @@ export class ImageGenerator {
     this.log('[render] 周课表, 周数=', week, '天数=', days.length)
     const now = new Date()
     const updateTime = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
-    return this.renderHtml(renderWeeklyScheduleTemplate(nickname, week, dateRange, days, updateTime, this.fontName), '周课表')
+    return this.renderHtml(renderWeeklyScheduleTemplate(nickname, week, dateRange, days, updateTime, this.fontName, this.colors), '周课表')
   }
 
   private log(...args: unknown[]) {

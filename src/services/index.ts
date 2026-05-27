@@ -1,5 +1,5 @@
 import type { Context } from 'koishi'
-import type { Config } from '../index'
+import type { Config } from '../config'
 import { DataManager } from './data-manager'
 import { ICSParser } from './ics-parser'
 import { ScheduleService } from './schedule-service'
@@ -9,7 +9,7 @@ import { HolidayService } from './holiday'
 export function createCourseScheduleServices(ctx: Context, config: Config) {
   const dataManager = new DataManager(ctx)
   const icsParser = new ICSParser()
-  const imageGenerator = new ImageGenerator(ctx, config.textFontPath, config.renderWaitUntil, config.verboseConsoleLog)
+  const imageGenerator = new ImageGenerator(ctx, config.textFontPath, config.renderWaitUntil, config.verboseConsoleLog, config.renderColors)
   const logFn = (...args: unknown[]) => {
     if (config.verboseConsoleLog) ctx.logger.info('[course-schedule]', ...args)
   }

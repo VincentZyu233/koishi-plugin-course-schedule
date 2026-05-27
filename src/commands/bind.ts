@@ -1,6 +1,6 @@
 import { Context } from 'koishi'
 import axios from 'axios'
-import type { Config } from '../index'
+import type { Config } from '../config'
 import type { CourseScheduleServices } from '../services'
 import type { TargetUser } from '../types'
 import { IcsFileService } from '../services/ics-file'

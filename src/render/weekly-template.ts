@@ -1,4 +1,6 @@
 import type { WeeklyDayView } from '../types'
+import type { RenderColors } from '../config'
+import { defaultColors } from '../config'
 
 function esc(v: string) {
   return v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
@@ -13,6 +15,7 @@ export function renderWeeklyScheduleTemplate(
   days: WeeklyDayView[],
   updateTime: string,
   fontName = '',
+  colors: RenderColors = defaultColors,
 ) {
   const dayBlocks = days.map((day) => {
     const holidayTag = day.isHoliday ? ` [${esc(day.holidayName)}]` : day.isWorkdayOnWeekend ? ` [${esc(day.holidayName)}]` : ''
@@ -31,16 +34,14 @@ export function renderWeeklyScheduleTemplate(
     return `<div class="db">${dayHeader}${courseItems || noCourses}</div>`
   }).join('')
 
-  const totalHeight = 140 + days.length * 40 + days.reduce((sum, d) => sum + Math.max(d.courses.length, 1) * 40, 0) + 40
-
   return `<!doctype html>
 <html><head><meta charset="utf-8"><style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{width:1200px;background:#FFF;font-family:${ff(fontName)}"Microsoft YaHei","PingFang SC",sans-serif;overflow:hidden;padding:40px}
-.ac{width:20px;height:60px;background:#26A69A;border-radius:0 4px 4px 0;margin-bottom:16px}
+.ac{width:20px;height:60px;background:${colors.primaryColor};border-radius:0 4px 4px 0;margin-bottom:16px}
 .ht{font-size:48px;font-weight:700;color:#000;margin-bottom:8px}
 .sb{font-size:24px;color:#888;margin-bottom:30px}
-.dh{font-size:28px;font-weight:700;color:#000;padding:10px 0;border-bottom:2px solid #26A69A;margin-bottom:8px}
+.dh{font-size:28px;font-weight:700;color:#000;padding:10px 0;border-bottom:2px solid ${colors.primaryColor};margin-bottom:8px}
 .ci{display:flex;align-items:center;padding:6px 0;border-bottom:1px solid #f0f0f0}
 .ci:last-child{border-bottom:none}
 .ct{flex:0 0 160px;font-size:24px;font-weight:700;color:#000}

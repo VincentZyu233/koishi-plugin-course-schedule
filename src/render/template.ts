@@ -1,27 +1,33 @@
 import { FALLBACK_AVATAR } from '../constants'
 import type { DayCourseView, RankingItem } from '../types'
+import type { RenderColors } from '../config'
+import { defaultColors } from '../config'
 
 function esc(v: string) {
   return v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
 }
 
-const S: Record<DayCourseView['status'], { label: string; bg: string; fg: string }> = {
-  ongoing: { label: '进行中', bg: '#D32F2F', fg: '#FFFFFF' },
-  next: { label: '下一节', bg: '#1976D2', fg: '#FFFFFF' },
-  finished: { label: '已结束', bg: '#388E3C', fg: '#FFFFFF' },
-  nocourse: { label: '无课程', bg: '#757575', fg: '#FFFFFF' },
-}
-
 function ff(name: string) { return name ? `'${name}',` : '' }
 
-export function renderGroupScheduleTemplate(items: DayCourseView[], title: string, fontName = '', logFn?: (...args: unknown[]) => void) {
+function makeStatus(colors: RenderColors) {
+  return {
+    ongoing: { label: '进行中', bg: colors.statusOngoingColor, fg: '#FFFFFF' },
+    next: { label: '下一节', bg: colors.statusNextColor, fg: '#FFFFFF' },
+    finished: { label: '已结束', bg: colors.statusFinishedColor, fg: '#FFFFFF' },
+    nocourse: { label: '无课程', bg: '#757575', fg: '#FFFFFF' },
+  }
+}
+
+export function renderGroupScheduleTemplate(items: DayCourseView[], title: string, fontName = '', colors: RenderColors = defaultColors, logFn?: (...args: unknown[]) => void) {
+  const S = makeStatus(colors)
   if (logFn) logFn('[template] 群课表模板渲染: 共', items.length, '个 item')
   const rows = items.map((item, idx) => {
     const s = S[item.status]
     const y = 160 + idx * 120
     const summary = [item.courseName, item.location].filter(Boolean).join(' @ ')
     const timeInfo = [item.startTime && item.endTime ? `${item.startTime}-${item.endTime}` : '', item.statusDetail].filter(Boolean).join(' ')
-  return `
+    if (logFn) logFn(`[template]   item${idx}: summary="${summary}", timeInfo="${timeInfo}", status=${s.label}, bg=${s.bg}`)
+    return `
     <div class="row" style="top:${y}px">
       <img class="av" src="${esc(item.useravatar || FALLBACK_AVATAR)}" alt="">
       <div class="ar"></div>
@@ -37,7 +43,7 @@ export function renderGroupScheduleTemplate(items: DayCourseView[], title: strin
 *{margin:0;padding:0;box-sizing:border-box}
 body{width:1200px;background:#FFF;font-family:${ff(fontName)}"Microsoft YaHei","PingFang SC",sans-serif;overflow:hidden}
 .w{width:1200px;position:relative;min-height:${40 + 120 + items.length * 120 + 80}px}
-.ac{position:absolute;left:40px;top:40px;width:20px;height:60px;background:#26A69A;border-radius:0 4px 4px 0}
+.ac{position:absolute;left:40px;top:40px;width:20px;height:60px;background:${colors.primaryColor};border-radius:0 4px 4px 0}
 .tl{position:absolute;left:80px;top:40px;font-size:48px;font-weight:700;color:#000;white-space:nowrap}
 .ul{position:absolute;left:80px;top:110px;width:300px;height:5px;background:#A7FFEB;border-radius:3px}
 .row{position:absolute;left:0;right:0;height:120px}
@@ -56,7 +62,7 @@ body{width:1200px;background:#FFF;font-family:${ff(fontName)}"Microsoft YaHei","
 </div></body></html>`
 }
 
-export function renderPersonalScheduleTemplate(items: DayCourseView[], title: string, footer: string, fontName = '') {
+export function renderPersonalScheduleTemplate(items: DayCourseView[], title: string, footer: string, fontName = '', colors: RenderColors = defaultColors) {
   const cards = items.map(item => {
     const lines = [item.courseName, item.location].filter(Boolean)
     const extra = [item.startTime && item.endTime ? `${item.startTime}-${item.endTime}` : '', item.statusDetail].filter(Boolean).join(' ')
@@ -73,7 +79,7 @@ export function renderPersonalScheduleTemplate(items: DayCourseView[], title: st
 *{margin:0;padding:0;box-sizing:border-box}
 body{width:1000px;background:#FFF;font-family:${ff(fontName)}"Microsoft YaHei","PingFang SC",sans-serif;overflow:hidden;padding:40px}
 .ht{font-size:40px;font-weight:700;color:#000;margin-bottom:20px}
-.cd{background:#E3F2FD;border-radius:10px;padding:15px 20px;margin-bottom:5px}
+.cd{background:${colors.cardBgColor};border-radius:10px;padding:15px 20px;margin-bottom:5px}
 .ct{font-size:28px;font-weight:700;color:#000;margin-bottom:8px}
 .cl{font-size:22px;color:#333;margin-bottom:4px}
 .cl.cm{color:#888}
