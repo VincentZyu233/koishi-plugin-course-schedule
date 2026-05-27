@@ -35,10 +35,17 @@
 
 ## 📸 效果预览
 
-![个人课表](docs/images/preview.课表.查看.png)
-![群课表](docs/images/preview.课表.群课表.png)
-![本周排行](docs/images/preview.课表.排行.png)
-![周课表](docs/images/preview.课表.周课表.png)
+**个人课表** — 查看自己某天的全部课程
+![个人课表](https://gitee.com/vincent-zyu/koishi-plugin-course-schedule/raw/main/docs/images/preview.%E8%AF%BE%E8%A1%A8.%E6%9F%A5%E7%9C%8B.png)
+
+**群课表** — 查看本群所有人某天的课程
+![群课表](https://gitee.com/vincent-zyu/koishi-plugin-course-schedule/raw/main/docs/images/preview.%E8%AF%BE%E8%A1%A8.%E7%BE%A4%E8%AF%BE%E8%A1%A8.png)
+
+**本周排行** — 查看本周本群上课时长排行榜
+![本周排行](https://gitee.com/vincent-zyu/koishi-plugin-course-schedule/raw/main/docs/images/preview.%E8%AF%BE%E8%A1%A8.%E6%8E%92%E8%A1%8C.png)
+
+**周课表** — 查看个人周课表纵览
+![周课表](https://gitee.com/vincent-zyu/koishi-plugin-course-schedule/raw/main/docs/images/preview.%E8%AF%BE%E8%A1%A8.%E5%91%A8%E8%AF%BE%E8%A1%A8.png)
 
 ## ✨ 功能
 

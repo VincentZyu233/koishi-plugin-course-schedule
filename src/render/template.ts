@@ -49,7 +49,7 @@ body{width:1200px;background:#FFF;font-family:${ff(fontName)}"Microsoft YaHei","
 .w{width:1200px;position:relative;min-height:${40 + 120 + items.length * 120 + 80}px}
 .ac{position:absolute;left:40px;top:40px;width:20px;height:60px;background:${colors.primaryColor};border-radius:0 4px 4px 0}
 .tl{position:absolute;left:80px;top:40px;font-size:48px;font-weight:700;color:#000;white-space:nowrap}
-.ul{position:absolute;left:80px;top:110px;width:300px;height:5px;background:#A7FFEB;border-radius:3px}
+.ul{position:absolute;left:80px;top:110px;width:300px;height:5px;background:#E0E0E0;border-radius:3px}
 .row{position:absolute;left:0;right:0;height:120px}
 .av{position:absolute;left:40px;top:20px;width:80px;height:80px;border-radius:50%;object-fit:cover;background:#e0e0e0}
 .ar{position:absolute;left:140px;top:40px;width:0;height:0;border-top:20px solid transparent;border-bottom:20px solid transparent;border-left:30px solid #BDBDBD}
