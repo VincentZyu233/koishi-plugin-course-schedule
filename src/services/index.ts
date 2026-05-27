@@ -13,7 +13,7 @@ export function createCourseScheduleServices(ctx: Context, config: Config) {
   const logFn = (...args: unknown[]) => {
     if (config.verboseConsoleLog) ctx.logger.info('[course-schedule]', ...args)
   }
-  const holidayService = new HolidayService(ctx, logFn)
+  const holidayService = new HolidayService(ctx, config.holidayCacheDir, logFn)
   const scheduleService = new ScheduleService(ctx, dataManager, icsParser, imageGenerator, holidayService)
 
   return {

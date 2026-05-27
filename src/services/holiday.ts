@@ -16,8 +16,8 @@ export class HolidayService {
   private memoryCache = new Map<number, HolidayData['holiday']>()
   private logFn: (...args: unknown[]) => void
 
-  constructor(ctx: Context, logFn: (...args: unknown[]) => void) {
-    this.cacheDir = path.resolve(__dirname, '..', 'data', 'holidays')
+  constructor(ctx: Context, cacheDir: string, logFn: (...args: unknown[]) => void) {
+    this.cacheDir = cacheDir
     this.logFn = logFn
     this.ensureCacheDir()
   }
@@ -81,10 +81,20 @@ export class HolidayService {
     const timer = setTimeout(() => controller.abort(), 10000)
     try {
       const url = `${API_URL}/${year}`
-      const resp = await fetch(url, { signal: controller.signal })
+      this.logFn('[holiday] fetch 请求 url:', url)
+      const resp = await fetch(url, {
+        signal: controller.signal,
+        headers: { 'User-Agent': 'koishi-plugin-course-schedule/0.2.x' },
+      })
+      this.logFn('[holiday] fetch 响应 status:', resp.status, resp.statusText)
+      this.logFn('[holiday] fetch 响应 headers:', JSON.stringify(Object.fromEntries(resp.headers.entries())))
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
       const data = await resp.json() as HolidayData
+      this.logFn('[holiday] fetch 数据 code:', data.code, 'year:', data.year, '条目数:', Object.keys(data?.holiday ?? {}).length)
       return data?.holiday ?? null
+    } catch (e) {
+      this.logFn('[holiday] fetch 抛出异常:', (e as Error).message)
+      return null
     } finally {
       clearTimeout(timer)
     }

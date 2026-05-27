@@ -45,8 +45,9 @@ export interface Config {
   renderFooterText: string
 
   // 📁 文件设置
-  icsTempDir: string
-  icsTempDeleteTime: number
+  scheduleFileTempDir: string
+  scheduleFileTempDeleteTime: number
+  holidayCacheDir: string
 
   // 🎨 渲染颜色设置
   renderColors: RenderColors
@@ -89,8 +90,9 @@ export const Config: Schema<Config> = Schema.intersect([
 
   // 📁 文件设置
   Schema.object({
-    icsTempDir: Schema.string().default(path.resolve(__dirname, '..', 'tmp')).role('textarea', { rows: [2, 5] }).description('📁 ICS 临时文件目录（绝对路径）'),
-    icsTempDeleteTime: Schema.number().default(300).description('🗑️ 临时 ICS 文件删除时间（秒），0 或负数表示永不删除'),
+    scheduleFileTempDir: Schema.string().default(path.resolve(__dirname, '..', 'cache', 'files')).role('textarea', { rows: [2, 5] }).description('📁 课表文件临时目录（绝对路径）'),
+    scheduleFileTempDeleteTime: Schema.number().default(300).description('🗑️ 临时课表文件删除时间（秒），0 或负数表示永不删除'),
+    holidayCacheDir: Schema.string().default(path.resolve(__dirname, '..', 'cache', 'holidays')).role('textarea', { rows: [2, 5] }).description('📁 节假日缓存目录（绝对路径）'),
   }).description('📁 文件设置'),
 
   // 🎨 渲染颜色设置

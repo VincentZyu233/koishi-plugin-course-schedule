@@ -9,6 +9,12 @@ C = "\033[96m"
 N = "\033[0m"
 B = "\033[1m"
 
+
+def pad(s, w):
+    l = sum(2 if ord(c) > 127 else 1 for c in str(s))
+    return str(s) + " " * max(0, w - l)
+
+
 test_dates = [
     ("2026-01-01", "元旦"),
     ("2026-01-04", "元旦后补班"),
@@ -39,7 +45,7 @@ print(f"{B}{C}>>>{N} 状态码: {G if code == 0 else R}{code}{N}\n")
 
 holidays = data.get("holiday", {})
 
-print(f"{B}{'日期':<12} {'星期':<6} {'节日名称':<12} {'类型':<16}{N}")
+print(f"{B}{pad('日期', 12)} {pad('星期', 6)} {pad('节日名称', 12)} 类型{N}")
 print(f"{B}{'-' * 48}{N}")
 for date_str, note in test_dates:
     dt = datetime.strptime(date_str, "%Y-%m-%d")
@@ -53,6 +59,6 @@ for date_str, note in test_dates:
             t = f"{Y}🔄 调休上班日{N}"
         else:
             t = f"{R}❓ 未知{N}"
-        print(f"{date_str:<12} {weekday:<6} {name:<12} {t}")
+        print(f"{date_str:<12} {pad(weekday, 6)} {pad(name, 12)} {t}")
     else:
-        print(f"{date_str:<12} {weekday:<6} {'—':<12} {'➖ 普通日期'}")
+        print(f"{date_str:<12} {pad(weekday, 6)} {pad('无', 12)} ➖ 普通日期")

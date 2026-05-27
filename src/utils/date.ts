@@ -46,14 +46,19 @@ export function weekdayCodeToName(code: string) {
 }
 
 export function isCourseActiveOnDate(
-  course: { curriculumndate: string[]; startDate: string; endDate: string },
+  course: { curriculumndate: string[]; startDate: string; endDate: string; weeks?: number[] },
   date: Date,
   weekday: string,
+  semesterStart?: string,
 ) {
   const iso = toIsoDate(date)
-  return iso >= course.startDate
-    && iso <= course.endDate
-    && (course.curriculumndate ?? []).includes(weekday)
+  if (iso < course.startDate || iso > course.endDate) return false
+  if (!(course.curriculumndate ?? []).includes(weekday)) return false
+  if (semesterStart && course.weeks?.length) {
+    const weekNum = getWeekNumberFromDate(semesterStart, date)
+    if (!course.weeks.includes(weekNum)) return false
+  }
+  return true
 }
 
 export function formatDurationMinutes(totalMinutes: number) {

@@ -19,7 +19,7 @@ export { Config }
 
 export function apply(ctx: Context, config: Config) {
   const services = createCourseScheduleServices(ctx, config)
-  const icsFileService = new IcsFileService(ctx, config.icsTempDir, config.icsTempDeleteTime, services.log)
+  const icsFileService = new IcsFileService(ctx, config.scheduleFileTempDir, config.scheduleFileTempDeleteTime, services.log)
   const icsWatcher = new IcsWatcher(ctx, services.log)
 
   ctx.on('ready', async () => {

@@ -82,8 +82,8 @@ export class StarlinkParser {
       if (!startTime || !endTime) continue
 
       const weeks = this.calculateWeeks(course, startDate)
-      const startWeek = course.startWeek ?? 1
-      const endWeek = course.endWeek ?? weeks.length
+      const startWeek = course.startWeek ?? weeks[0] ?? 1
+      const endWeek = course.endWeek ?? weeks[weeks.length - 1] ?? 20
 
       const courseRecord: Omit<CourseRecord, 'id'> = {
         channelId,

@@ -96,7 +96,7 @@
 支持多级节假日数据源，自动获取并缓存：
 
 1. **API 优先** — 首次访问自动请求 [timor.tech](https://timor.tech/api/holiday) 获取当年节假日数据
-2. **本地缓存** — API 成功拉取后缓存到 `data/holidays/{year}.json`，下次启动直接读取
+2. **本地缓存** — API 成功拉取后缓存到 `cache/holidays/{year}.json`，下次启动直接读取
 3. **内置硬编码** — 内置 2026 年完整节假日数据作为离线 fallback（2027-2030 年占位，API 不可用时返回无数据）
 
 节假日自动提示休息消息 🎉，调休上班日正常显示课程。
@@ -131,8 +131,9 @@ yarn add koishi-plugin-course-schedule
 | `weekCommand` | `周课表` | 查看周课表命令名 |
 | `renderWaitUntil` | `load` | Puppeteer 渲染等待策略 |
 | `textFontPath` | `(空)` | 自定义字体文件路径 |
-| `icsTempDir` | `path.resolve(__dirname, '..', 'tmp')` | ICS 临时文件目录（需要填写绝对路径，默认值是插件目录下的`tmp`文件夹） |
-| `icsTempDeleteTime` | `300` | 临时文件自动删除时间（秒），`0`或`负数`表示永不删除 |
+| `scheduleFileTempDir` | `cache/files` | 课表文件临时目录（绝对路径） |
+| `scheduleFileTempDeleteTime` | `300` | 临时课表文件删除时间（秒），`0`或`负数`表示永不删除 |
+| `holidayCacheDir` | `cache/holidays` | 节假日缓存目录（绝对路径） |
 | `renderColors.primaryColor` | `#52449e` | 主题色 |
 | `renderColors.cardBgColor` | `#E3F2FD` | 个人课表卡片背景色 |
 | `renderColors.statusOngoingColor` | `#D32F2F` | 进行中标签色 |

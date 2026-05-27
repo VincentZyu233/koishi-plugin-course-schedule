@@ -45,10 +45,11 @@ export class ScheduleService {
     const targetDate = getDayOffsetDate(dayOffset)
     const currentWeekday = weekdayNameOfDate(targetDate)
     const allCourses = await this.listUserCourses(channelId, userid)
+    const semesterStart = this.getSemesterStart(allCourses)
 
     const holidayInfo = await this.holidayService.getHolidayInfoForDate(targetDate)
     if (holidayInfo?.isHoliday) {
-      const rescheduled = allCourses.filter(c => isCourseActiveOnDate(c, targetDate, currentWeekday))
+      const rescheduled = allCourses.filter(c => isCourseActiveOnDate(c, targetDate, currentWeekday, semesterStart))
       if (!rescheduled.length) {
         return `今天是 ${holidayInfo.name}，好好休息吧！🎉`
       }
@@ -57,7 +58,7 @@ export class ScheduleService {
     }
 
     const courses = allCourses
-      .filter(course => isCourseActiveOnDate(course, targetDate, currentWeekday))
+      .filter(course => isCourseActiveOnDate(course, targetDate, currentWeekday, semesterStart))
       .sort((a, b) => a.curriculumtime.localeCompare(b.curriculumtime, 'zh-CN'))
 
     this.log('[schedule] renderPersonalSchedule, 总数=', allCourses.length, '筛选后=', courses.length)
@@ -69,6 +70,7 @@ export class ScheduleService {
     const targetDate = getDayOffsetDate(dayOffset)
     const weekday = weekdayNameOfDate(targetDate)
     const courses = await this.listChannelCourses(channelId)
+    const semesterStart = this.getSemesterStart(courses)
 
     this.log('[group] === 群课表渲染开始 ===')
     this.log('[group] 目标日期:', toIsoDate(targetDate), `(${weekday})`, 'dayOffset=', dayOffset)
@@ -80,7 +82,7 @@ export class ScheduleService {
 
     const holidayInfo = await this.holidayService.getHolidayInfoForDate(targetDate)
     if (holidayInfo?.isHoliday) {
-      const rescheduled = courses.filter(c => isCourseActiveOnDate(c, targetDate, weekday))
+      const rescheduled = courses.filter(c => isCourseActiveOnDate(c, targetDate, weekday, semesterStart))
       if (!rescheduled.length) {
         return `今天是 ${holidayInfo.name}，群友们都在休息！🎉`
       }
@@ -93,12 +95,16 @@ export class ScheduleService {
     let filteredCount = 0
 
     for (const course of courses) {
-      if (!isCourseActiveOnDate(course, targetDate, weekday)) {
+      if (!isCourseActiveOnDate(course, targetDate, weekday, semesterStart)) {
         filteredCount++
         const reasons: string[] = []
         if (!course.curriculumndate.includes(weekday)) reasons.push('星期不匹配')
         if (toIsoDate(targetDate) < course.startDate) reasons.push('日期早于startDate')
         if (toIsoDate(targetDate) > course.endDate) reasons.push('日期晚于endDate')
+        if (course.weeks?.length) {
+          const weekNum = getWeekNumberFromDate(semesterStart, targetDate)
+          if (!course.weeks.includes(weekNum)) reasons.push(`周数${weekNum}不在weeks数组中`)
+        }
         this.log(`[group]   过滤掉: ${course.curriculumname} (原因: ${reasons.join(', ')})`)
         continue
       }
@@ -163,6 +169,7 @@ export class ScheduleService {
 
   async getWeeklyRanking(channelId: string) {
     const courses = await this.listChannelCourses(channelId)
+    const semesterStart = this.getSemesterStart(courses)
     const week = getWeekRange(new Date())
     const ranking = new Map<string, RankingItem>()
 
@@ -173,7 +180,7 @@ export class ScheduleService {
       if (duration <= 0) continue
 
       for (const day of week.days) {
-        if (!isCourseActiveOnDate(course, day.date, day.weekday)) continue
+        if (!isCourseActiveOnDate(course, day.date, day.weekday, semesterStart)) continue
         if (!weekdays.includes(day.weekday)) continue
         const item = ranking.get(course.userid) ?? {
           userid: course.userid,
@@ -233,7 +240,7 @@ export class ScheduleService {
       const isWorkdayOnWeekend = holidayInfo?.isWorkdayOnWeekend ?? false
 
       const dayCourses = allCourses
-        .filter(c => c.curriculumndate.includes(weekday) && isCourseActiveOnDate(c, targetDate, weekday))
+        .filter(c => c.curriculumndate.includes(weekday) && isCourseActiveOnDate(c, targetDate, weekday, semesterStart))
         .sort((a, b) => a.curriculumtime.localeCompare(b.curriculumtime, 'zh-CN'))
 
       const courses: WeeklyCourseView[] = dayCourses.map(c => {
