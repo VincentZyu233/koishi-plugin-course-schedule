@@ -48,6 +48,7 @@
 |------|------|
 | **WakeUp 课程表** | 直接发送 WakeUp 分享口令即可导入 |
 | **星链课表** | 支持星链课表分享码和 JSON 格式（[格式说明](docs/各种课表格式/星链课表JSON格式.md)） |
+| **用户自定义时间表** | 通过 `课表.设置星链时间表` 上传自定义时间段 JSON，绑定星链课表时自动应用 |
 | **[Yunzai 插件](https://github.com/Temmie0125/Yunzai-Schedule-Plugin)原生 JSON** | 兼容 Yunzai Schedule Plugin 的原生 JSON 格式，时间信息直接存储，**推荐手动构造课表时使用**（[格式说明](docs/各种课表格式/Yunzai-Schedule-Plugin原生JSON格式.md)） |
 | **拾光课表 JSON** | 兼容拾光课程表 App 的导出 JSON |
 | **WakeUp 备份文件** | 支持 `.wakeup_schedule` 备份文件导入 |
@@ -57,6 +58,7 @@
 
 ```
 课表.绑定 <文本/文件>     — 导入课表数据
+课表.设置星链时间表       — 设置星链课表时间表（用户自定义时间段）
 课表.查看 [天]           — 查看个人某天课程
 课表.群课表 [天]         — 查看本群所有人某天的课程
 课表.排行                — 查看本周本群上课时长排行榜
@@ -123,14 +125,17 @@ yarn add koishi-plugin-course-schedule
 |--------|--------|------|
 | `enableQuote` | `true` | 💬 开启后，所有消息都会引用回复触发指令的消息 |
 | `enableWatingHint` | `true` | ⏳ 是否启用「渲染中，请稍候...」提示消息 |
+| `bindPromptText` | (默认提示文本) | 📝 绑定指令交互式等待提示文本（支持换行） |
 | `baseCommand` | `课表` | 父级指令名称 |
 | `bindCommand` | `绑定` | 绑定课表命令名 |
+| `timetableCommand` | `设置星链时间表` | 设置星链时间表命令名 |
 | `showCommand` | `查看` | 查看个人课表命令名 |
 | `groupCommand` | `群课表` | 查看群友课表命令名 |
 | `rankingCommand` | `排行` | 查看本周排行命令名 |
 | `weekCommand` | `周课表` | 查看周课表命令名 |
 | `renderWaitUntil` | `load` | Puppeteer 渲染等待策略 |
 | `textFontPath` | `(空)` | 自定义字体文件路径 |
+| `renderFooterText` | (默认底部文字) | 📝 图片底部文字（支持换行，留空则不显示） |
 | `scheduleFileTempDir` | `cache/files` | 课表文件临时目录（绝对路径） |
 | `scheduleFileTempDeleteTime` | `300` | 临时课表文件删除时间（秒），`0`或`负数`表示永不删除 |
 | `holidayCacheDir` | `cache/holidays` | 节假日缓存目录（绝对路径） |
@@ -139,7 +144,7 @@ yarn add koishi-plugin-course-schedule
 | `renderColors.statusOngoingColor` | `#D32F2F` | 进行中标签色 |
 | `renderColors.statusNextColor` | `#1976D2` | 下一节标签色 |
 | `renderColors.statusFinishedColor` | `#388E3C` | 已结束标签色 |
-| `verboseConsoleLog` | `false` | 详细调试日志 |
+| `verboseConsoleLog` | `false` | 📋 详细控制台调试日志 |
 
 ## 🔗 本插件链接
 

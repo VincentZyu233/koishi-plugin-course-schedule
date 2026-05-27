@@ -42,6 +42,7 @@ export const usage = `
 <ul>
   <li><b>WakeUp 课程表</b> —— 直接发送 WakeUp 分享口令即可导入</li>
   <li><b>星链课表</b> —— 支持星链课表分享码和 JSON 格式</li>
+  <li><b>用户自定义时间表</b> —— 通过 <code>课表.设置星链时间表</code> 上传，绑定星链课表时自动应用</li>
   <li><b>拾光课表 / 原生 JSON</b> —— 粘贴课表 JSON 文本直接导入</li>
   <li><b>WakeUp 备份文件</b> —— 支持 <code>.wakeup_schedule</code> 备份文件导入</li>
   <li><b>ICS 文件/链接</b> —— 支持 <code>.ics</code> 文件上传或 ICS 链接下载解析</li>
@@ -51,6 +52,7 @@ export const usage = `
 <table>
   <tr><th>命令</th><th>说明</th><th>示例</th></tr>
   <tr><td><code>课表.绑定 &lt;文本/文件&gt;</code></td><td>导入课表数据</td><td><code>课表.绑定 分享口令为「xxxxxxxx」</code></td></tr>
+  <tr><td><code>课表.设置星链时间表</code></td><td>设置星链课表时间表</td><td><code>课表.设置星链时间表</code></td></tr>
   <tr><td><code>课表.查看 [天]</code></td><td>查看个人某天课程</td><td><code>课表.查看 明天</code></td></tr>
   <tr><td><code>课表.群课表 [天]</code></td><td>查看本群所有人某天的课程</td><td><code>课表.群课表 周三</code></td></tr>
   <tr><td><code>课表.排行</code></td><td>查看本周本群上课时长排行榜</td><td><code>课表.排行</code></td></tr>
@@ -110,10 +112,18 @@ export const usage = `
   <li><b>已结束标签色</b> —— 已结束的状态标签</li>
 </ul>
 
+<h3>⚙️ 其他可配置项</h3>
+<ul>
+  <li><b>bindPromptText</b> —— 绑定指令交互式等待时的提示文本（支持换行）</li>
+  <li><b>renderFooterText</b> —— 渲染图片底部文字（支持换行，留空则不显示）</li>
+  <li><b>verboseConsoleLog</b> —— 开启后输出详细调试日志到控制台</li>
+</ul>
+
 <h3>📁 文件设置</h3>
 <ul>
   <li>课表文件临时目录和自动清理时间可配置</li>
   <li>节假日缓存目录可自定义</li>
+  <li>用户自定义时间表缓存于 <code>cache/timeslots/{userId}.json</code></li>
 </ul>
 
 </details>

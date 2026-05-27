@@ -7,6 +7,7 @@ import { IcsWatcher } from '../services/ics-watcher'
 import { StarlinkParser } from '../services/starlink-parser'
 import { JsonParser } from '../services/json-parser'
 import { WakeupFileParser } from '../services/wakeup-file-parser'
+import { TimeSlotManager } from '../services/timeslot-manager'
 
 const starlinkParser = new StarlinkParser()
 const jsonParser = new JsonParser()
@@ -15,6 +16,7 @@ const wakeupFileParser = new WakeupFileParser()
 export function registerBindCommand(
   ctx: Context, config: Config, services: CourseScheduleServices,
   icsFileService: IcsFileService, icsWatcher: IcsWatcher,
+  timeSlotManager: TimeSlotManager,
 ) {
   ctx.command(`${config.baseCommand}.${config.bindCommand} [text:text]`, `📥 导入课表捏`)
     .example(`${config.baseCommand}.${config.bindCommand} 这是来自「WakeUp课程表」的课表分享......分享口令为「xxxxxxxx」`)
@@ -49,7 +51,7 @@ export function registerBindCommand(
 
       if (!sourceText) {
         services.log('[bind] 无直接参数，进入交互式等待')
-        await session.send(config.bindPromptText)
+        await session.send(`${config.enableQuote ? h.quote(session.messageId) : ''} ${config.bindPromptText}`)
         const promptResult = await (session as any).prompt(60000)
 
         if (promptResult) {
@@ -78,11 +80,11 @@ export function registerBindCommand(
         }
       }
 
-      const courses = await parseSourceText(sourceText, fileName, session.channelId, targetUser, services, ctx)
+      const courses = await parseSourceText(sourceText, fileName, session.channelId, targetUser, services, ctx, timeSlotManager)
       if (!courses.length) {
         services.log('[bind] 解析结果为空，无法导入')
         const doQuote = config.enableQuote ? h.quote(session.messageId) : ''
-        return `${doQuote}没有解析出可导入课程。请检查格式是否正确。`
+        return `${doQuote}❌ 没有解析出可导入课程。📋 请检查格式是否正确。`
       }
 
       services.log('[bind] 开始写入数据库, 频道=', session.channelId, '用户=', session.userId)
@@ -109,6 +111,7 @@ async function parseSourceText(
   targetUser: TargetUser,
   services: CourseScheduleServices,
   ctx: Context,
+  timeSlotManager: TimeSlotManager,
 ): Promise<any[]> {
   const trimmed = sourceText.trim()
 
@@ -135,11 +138,20 @@ async function parseSourceText(
 
   // 2. 星链课表关键词
   if (trimmed.includes('星链课表') || trimmed.includes('starlinkkb')) {
-    const codeMatch = trimmed.match(/「([A-Za-z0-9_-]{8,64})」/) || trimmed.match(/分享码[为：:]\s*([A-Za-z0-9_-]+)/)
+    const codeMatch = trimmed.match(/输入[：:]\s*([A-Za-z0-9_-]+)/)
+      || trimmed.match(/「([A-Za-z0-9_-]+)」/)
+      || trimmed.match(/分享码[为：:]\s*([A-Za-z0-9_-]+)/)
+      || trimmed.match(/([A-Za-z0-9_-]{5,20})/)
     if (codeMatch?.[1]) {
       services.log('[bind] 检测到星链课表, code=', codeMatch[1])
       try {
-        const courses = await starlinkParser.fetchAndParse(ctx, codeMatch[1], channelId, targetUser)
+        const userTimeSlots = await timeSlotManager.loadTimeSlots(targetUser.userId)
+        if (userTimeSlots) {
+          services.log('[bind] 加载用户自定义时间表, userId=', targetUser.userId, '共', userTimeSlots.length, '个时间段')
+        } else {
+          services.log('[bind] 未找到用户自定义时间表, 将使用默认/API时间表')
+        }
+        const courses = await starlinkParser.fetchAndParse(ctx, codeMatch[1], channelId, targetUser, userTimeSlots ?? undefined)
         services.log('[bind] 星链课表解析完成, 课程数=', courses.length)
         return courses
       } catch (e: any) {
@@ -156,7 +168,13 @@ async function parseSourceText(
     if (parsed) {
       if (starlinkParser.isStarlinkJson(parsed)) {
         services.log('[bind] 检测到星链课表 JSON')
-        const courses = starlinkParser.convertStarlinkJson(parsed, channelId, targetUser)
+        const userTimeSlots = await timeSlotManager.loadTimeSlots(targetUser.userId)
+        if (userTimeSlots) {
+          services.log('[bind] 加载用户自定义时间表, userId=', targetUser.userId, '共', userTimeSlots.length, '个时间段')
+        } else {
+          services.log('[bind] 未找到用户自定义时间表, 将使用默认/API时间表')
+        }
+        const courses = starlinkParser.convertStarlinkJson(parsed, channelId, targetUser, userTimeSlots ?? undefined)
         services.log('[bind] 星链 JSON 解析完成, 课程数=', courses.length)
         return courses
       }

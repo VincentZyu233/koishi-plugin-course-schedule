@@ -8,6 +8,12 @@ interface StarlinkTimeSlot {
   endTime: string
 }
 
+interface UserTimeSlot {
+  section: number
+  startTime: string
+  endTime: string
+}
+
 interface StarlinkCourse {
   name: string
   teacher?: string
@@ -26,12 +32,30 @@ interface StarlinkCourse {
   endTime?: string
 }
 
-interface StarlinkResponse {
-  tableName?: string
-  startDate?: string
-  timeSlots?: StarlinkTimeSlot[]
-  courses?: StarlinkCourse[]
+interface StarlinkApiResponse {
+  data?: {
+    tableName?: string
+    name?: string
+    startDate?: string
+    timeSlots?: StarlinkTimeSlot[]
+    courses?: StarlinkCourse[]
+  }
 }
+
+const DEFAULT_TIME_SLOTS: StarlinkTimeSlot[] = [
+  { number: 1, startTime: '08:00', endTime: '08:45' },
+  { number: 2, startTime: '08:50', endTime: '09:35' },
+  { number: 3, startTime: '09:50', endTime: '10:35' },
+  { number: 4, startTime: '10:40', endTime: '11:25' },
+  { number: 5, startTime: '11:30', endTime: '12:15' },
+  { number: 6, startTime: '14:00', endTime: '14:45' },
+  { number: 7, startTime: '14:50', endTime: '15:35' },
+  { number: 8, startTime: '15:40', endTime: '16:25' },
+  { number: 9, startTime: '16:30', endTime: '17:15' },
+  { number: 10, startTime: '19:00', endTime: '19:45' },
+  { number: 11, startTime: '19:50', endTime: '20:35' },
+  { number: 12, startTime: '20:40', endTime: '21:25' },
+]
 
 export class StarlinkParser {
   async fetchAndParse(
@@ -39,21 +63,26 @@ export class StarlinkParser {
     shareCode: string,
     channelId: string,
     targetUser: TargetUser,
+    userTimeSlots?: UserTimeSlot[],
   ): Promise<Omit<CourseRecord, 'id'>[]> {
-    const data = await ctx.http.get<StarlinkResponse>(
+    const resp = await ctx.http.get<StarlinkApiResponse>(
       `https://api.starlinkkb.cn/share/curriculum/${shareCode}`,
       { timeout: 15000 },
     )
+    const data = resp?.data
     if (!data?.courses?.length) return []
-    return this.convertStarlinkJson(data, channelId, targetUser)
+    return this.convertStarlinkJson(data, channelId, targetUser, userTimeSlots)
   }
 
   convertStarlinkJson(
     data: StarlinkResponse,
     channelId: string,
     targetUser: TargetUser,
+    userTimeSlots?: UserTimeSlot[],
   ): Omit<CourseRecord, 'id'>[] {
-    const timeSlots = data.timeSlots ?? []
+    const timeSlots = this.resolveTimeSlots(data.timeSlots, userTimeSlots)
+    const source = userTimeSlots?.length ? 'user' : (data.timeSlots?.length ? 'api' : 'default')
+    console.log(`[starlink-parser] 使用${source === 'user' ? '用户自定义' : source === 'api' ? 'API返回的' : '默认'}时间表, 共${timeSlots.length}个时间段`)
     const startDate = data.startDate ?? this.defaultStartDate()
     const courses: Omit<CourseRecord, 'id'>[] = []
     const uniqueKeys = new Set<string>()
@@ -206,5 +235,20 @@ export class StarlinkParser {
   private timeToMinutes(time: string): number {
     const [h, m] = time.split(':').map(Number)
     return h * 60 + m
+  }
+
+  private resolveTimeSlots(
+    apiTimeSlots?: StarlinkTimeSlot[],
+    userTimeSlots?: UserTimeSlot[],
+  ): StarlinkTimeSlot[] {
+    if (userTimeSlots?.length) {
+      return userTimeSlots.map(u => ({
+        number: u.section,
+        startTime: u.startTime,
+        endTime: u.endTime,
+      }))
+    }
+    if (apiTimeSlots?.length) return apiTimeSlots
+    return DEFAULT_TIME_SLOTS
   }
 }
