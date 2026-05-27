@@ -1,4 +1,4 @@
-import axios from 'axios'
+import type { Context } from 'koishi'
 import type { CourseRecord, TargetUser } from '../types'
 import { toIsoDate } from '../utils/date'
 
@@ -35,15 +35,15 @@ interface StarlinkResponse {
 
 export class StarlinkParser {
   async fetchAndParse(
+    ctx: Context,
     shareCode: string,
     channelId: string,
     targetUser: TargetUser,
   ): Promise<Omit<CourseRecord, 'id'>[]> {
-    const resp = await axios.get<StarlinkResponse>(
+    const data = await ctx.http.get<StarlinkResponse>(
       `https://api.starlinkkb.cn/share/curriculum/${shareCode}`,
       { timeout: 15000 },
     )
-    const data = resp.data
     if (!data?.courses?.length) return []
     return this.convertStarlinkJson(data, channelId, targetUser)
   }

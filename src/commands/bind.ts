@@ -1,5 +1,4 @@
 import { h, Context } from 'koishi'
-import axios from 'axios'
 import type { Config } from '../config'
 import type { CourseScheduleServices } from '../services'
 import type { TargetUser } from '../types'
@@ -140,7 +139,7 @@ async function parseSourceText(
     if (codeMatch?.[1]) {
       services.log('[bind] 检测到星链课表, code=', codeMatch[1])
       try {
-        const courses = await starlinkParser.fetchAndParse(codeMatch[1], channelId, targetUser)
+        const courses = await starlinkParser.fetchAndParse(ctx, codeMatch[1], channelId, targetUser)
         services.log('[bind] 星链课表解析完成, 课程数=', courses.length)
         return courses
       } catch (e: any) {
