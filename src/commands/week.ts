@@ -1,3 +1,4 @@
+import { h } from 'koishi'
 import type { Context } from 'koishi'
 import type { Config } from '../config'
 import type { CourseScheduleServices } from '../services'
@@ -24,13 +25,15 @@ export function registerWeekCommand(ctx: Context, config: Config, services: Cour
 
       services.log('[week] 频道=', session.channelId, '用户=', session.userId, 'week=', week)
 
+      const quote = config.enableQuote ? h.quote(session.messageId) : ''
+
       if (weekNumber === -1 || weekNumber === -2) {
-        return '上周/下周功能需要记录学期开始日期，暂未实现。请使用 "课表.周课表 5" 指定周数。'
+        return `${quote}上周/下周功能需要记录学期开始日期，暂未实现。请使用 "课表.周课表 5" 指定周数。`
       }
 
       const img = await services.scheduleService.renderWeeklySchedule(session.channelId, session.userId, weekNumber)
       services.log('[week] 渲染结果:', img ? '成功' : '无数据')
-      if (typeof img === 'string') return img
-      return img ?? '当前没有可渲染的课程数据。'
+      if (typeof img === 'string') return `${quote}${img}`
+      return img ? [quote, img] : `${quote}当前没有可渲染的课程数据。`
     })
 }

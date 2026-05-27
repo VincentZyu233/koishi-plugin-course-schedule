@@ -1,3 +1,4 @@
+import { h } from 'koishi'
 import type { Context } from 'koishi'
 import type { Config } from '../config'
 import type { CourseScheduleServices } from '../services'
@@ -10,6 +11,7 @@ export function registerGroupCommand(ctx: Context, config: Config, services: Cou
       services.log('[group] 频道=', session.channelId, 'dayOffset=', dayOffset)
       const img = await services.scheduleService.renderChannelSchedule(session.channelId, dayOffset)
       services.log('[group] 渲染结果:', img ? '成功' : '无数据')
-      return img ?? '当前群组没有可渲染的课程数据。'
+      const quote = config.enableQuote ? h.quote(session.messageId) : ''
+      return img ? [quote, img] : `${quote}当前群组没有可渲染的课程数据。`
     })
 }

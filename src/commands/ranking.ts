@@ -1,3 +1,4 @@
+import { h } from 'koishi'
 import type { Context } from 'koishi'
 import type { Config } from '../config'
 import type { CourseScheduleServices } from '../services'
@@ -8,6 +9,7 @@ export function registerRankingCommand(ctx: Context, config: Config, services: C
       services.log('[ranking] 频道=', session.channelId)
       const img = await services.scheduleService.renderWeeklyRanking(session.channelId)
       services.log('[ranking] 渲染结果:', img ? '成功' : '无数据')
-      return img ?? '当前群组没有排行数据。'
+      const quote = config.enableQuote ? h.quote(session.messageId) : ''
+      return img ? [quote, img] : `${quote}当前群组没有排行数据。`
     })
 }

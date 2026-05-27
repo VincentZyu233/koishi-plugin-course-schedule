@@ -13,7 +13,7 @@ export const name = 'course-schedule'
 export const inject = {
   required: ['database', 'puppeteer', 'http'],
 }
-export const usage = '课程表插件，支持 WakeUp 导入、个人课表、群课表和本周排行。'
+export { usage } from './usage'
 
 export { Config }
 

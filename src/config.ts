@@ -26,24 +26,43 @@ export const RenderColorsSchema = Schema.object({
 })
 
 export interface Config {
+  // 💬 消息设置
+  enableQuote: boolean
+
+  // ⚙️ 指令设置
   baseCommand: string
   bindCommand: string
   showCommand: string
   groupCommand: string
   rankingCommand: string
   weekCommand: string
+
+  // 🖼️ 渲染设置
   renderWaitUntil: 'load' | 'domcontentloaded' | 'networkidle0' | 'networkidle2'
   textFontPath: string
+
+  // 📁 文件设置
   icsTempDir: string
   icsTempDeleteTime: number
+
+  // 🎨 渲染颜色设置
   renderColors: RenderColors
+
+  // 🐛 调试设置
   verboseConsoleLog: boolean
 }
 
 export const Config: Schema<Config> = Schema.intersect([
+
+  // 💬 消息设置
+  Schema.object({
+    enableQuote: Schema.boolean().default(true).description('💬 开启后，本插件发送的所有消息都会引用回复触发指令的消息'),
+  }).description('💬 消息设置'),
+
+  // ⚙️ 指令设置
   Schema.object({
     baseCommand: Schema.string().default('课表').description('父级指令名称'),
-    __split__: Schema.string().disabled().default('上面是父级指令，下面是字指令').description('-----上面是父级指令，下面是字指令-----'),
+    __split__: Schema.string().disabled().default('上面是父级指令，下面是字指令').description('_____上面是父级指令，下面是字指令_____'),
     bindCommand: Schema.string().default('绑定').description('绑定课表命令名'),
     showCommand: Schema.string().default('查看').description('查看个人课表命令名'),
     groupCommand: Schema.string().default('群课表').description('查看群友课表命令名'),
@@ -51,6 +70,7 @@ export const Config: Schema<Config> = Schema.intersect([
     weekCommand: Schema.string().default('周课表').description('查看周课表命令名'),
   }).description('⚙️ 指令设置'),
 
+  // 🖼️ 渲染设置
   Schema.object({
     renderWaitUntil: Schema.union([
       Schema.const('load').description('【load】等待页面与静态资源加载完成，适合当前纯本地 HTML 渲染'),
@@ -61,15 +81,18 @@ export const Config: Schema<Config> = Schema.intersect([
     textFontPath: Schema.string().default('').role('textarea', { rows: [2, 5] }).description('🔤 文字字体文件路径（绝对路径，留空则使用系统默认字体）'),
   }).description('🖼️ 渲染设置'),
 
+  // 📁 文件设置
   Schema.object({
     icsTempDir: Schema.string().default(path.resolve(__dirname, '..', 'tmp')).role('textarea', { rows: [2, 5] }).description('📁 ICS 临时文件目录（绝对路径）'),
     icsTempDeleteTime: Schema.number().default(300).description('🗑️ 临时 ICS 文件删除时间（秒），0 或负数表示永不删除'),
   }).description('📁 文件设置'),
 
+  // 🎨 渲染颜色设置
   Schema.object({
     renderColors: RenderColorsSchema,
   }).role('table').default({ renderColors: defaultColors }).description('🎨 渲染颜色设置'),
 
+  // 🐛 调试设置
   Schema.object({
     verboseConsoleLog: Schema.boolean().default(false).description('📋 详细控制台调试日志'),
   }).description('🐛 调试设置'),
