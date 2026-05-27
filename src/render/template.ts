@@ -32,9 +32,13 @@ export function renderGroupScheduleTemplate(items: DayCourseView[], title: strin
       <img class="av" src="${esc(item.useravatar || FALLBACK_AVATAR)}" alt="">
       <div class="ar"></div>
       <div class="nn" style="top:15px">${esc(item.username)}</div>
-      <div class="bd" style="top:60px;background:${s.bg};color:${s.fg}">${s.label}</div>
-      <div class="su" style="top:65px">${esc(summary)}</div>
-      <div class="ti" style="top:95px">${esc(timeInfo)}</div>
+      <div class="mc" style="top:55px">
+        <div class="mr">
+          <div class="bd" style="background:${s.bg};color:${s.fg}">${s.label}</div>
+          <div class="su">${esc(summary)}</div>
+        </div>
+        <div class="ti">${esc(timeInfo)}</div>
+      </div>
     </div>`
   }).join('')
 
@@ -50,9 +54,11 @@ body{width:1200px;background:#FFF;font-family:${ff(fontName)}"Microsoft YaHei","
 .av{position:absolute;left:40px;top:20px;width:80px;height:80px;border-radius:50%;object-fit:cover;background:#e0e0e0}
 .ar{position:absolute;left:140px;top:40px;width:0;height:0;border-top:20px solid transparent;border-bottom:20px solid transparent;border-left:30px solid #BDBDBD}
 .nn{position:absolute;left:190px;font-size:32px;font-weight:700;color:#333;white-space:nowrap}
-.bd{position:absolute;left:190px;font-size:24px;font-weight:700;padding:2px 10px;white-space:nowrap}
-.su{position:absolute;left:190px;font-size:24px;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:950px}
-.ti{position:absolute;left:190px;font-size:24px;color:#888;white-space:nowrap}
+.mc{position:absolute;left:190px;display:flex;flex-direction:column;gap:4px}
+.mr{display:flex;align-items:center;gap:10px}
+.bd{font-size:24px;font-weight:700;padding:2px 10px;white-space:nowrap;border-radius:3px}
+.su{font-size:24px;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:950px}
+.ti{font-size:24px;color:#888;white-space:nowrap}
 </style></head><body>
 <div class="w">
   <div class="ac"></div>
