@@ -5,3 +5,9 @@
 *.ico -text
 *.gif -text
 *.webp -text
+
+# 以下文件格式强制计入 GitHub 语言统计
+*.json linguist-detectable
+*.html linguist-detectable
+*.htm linguist-detectable
+*.txt linguist-detectable

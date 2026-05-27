@@ -1,0 +1,160 @@
+{
+  "name": "集美大学课表",
+  "startDate": "2026-03-02",
+  "courses": [
+    {
+      "name": "机器学习",
+      "teacher": "陈家苇",
+      "location": "建发0403",
+      "weekday": 2,
+      "startSection": 1,
+      "endSection": 2,
+      "startTime": "08:00",
+      "endTime": "09:35",
+      "weeks": [1, 2]
+    },
+    {
+      "name": "机器学习",
+      "teacher": "陈家苇",
+      "location": "建发0222",
+      "weekday": 3,
+      "startSection": 3,
+      "endSection": 4,
+      "startTime": "10:05",
+      "endTime": "11:40",
+      "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    },
+    {
+      "name": "机器学习",
+      "teacher": "陈家苇",
+      "location": "陆大0214",
+      "weekday": 4,
+      "startSection": 5,
+      "endSection": 6,
+      "startTime": "14:00",
+      "endTime": "15:35",
+      "weeks": [2, 4, 6, 8, 10, 12, 13, 14]
+    },
+    {
+      "name": "软件工程经济学",
+      "teacher": "廖江福",
+      "location": "建发0403",
+      "weekday": 2,
+      "startSection": 7,
+      "endSection": 8,
+      "startTime": "15:55",
+      "endTime": "17:30",
+      "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    },
+    {
+      "name": "软件工程经济学",
+      "teacher": "廖江福",
+      "location": "建发0222",
+      "weekday": 4,
+      "startSection": 3,
+      "endSection": 4,
+      "startTime": "10:05",
+      "endTime": "11:40",
+      "weeks": [9, 10, 11, 12]
+    },
+    {
+      "name": "项目管理",
+      "teacher": "叶文来",
+      "location": "建发0403",
+      "weekday": 2,
+      "startSection": 1,
+      "endSection": 2,
+      "startTime": "08:00",
+      "endTime": "09:35",
+      "weeks": [3, 4]
+    },
+    {
+      "name": "项目管理",
+      "teacher": "叶文来",
+      "location": "建发0222",
+      "weekday": 5,
+      "startSection": 1,
+      "endSection": 2,
+      "startTime": "08:00",
+      "endTime": "09:35",
+      "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    },
+    {
+      "name": "软件测试（双语）",
+      "teacher": "林诗薇",
+      "location": "建发0403",
+      "weekday": 2,
+      "startSection": 1,
+      "endSection": 2,
+      "startTime": "08:00",
+      "endTime": "09:35",
+      "weeks": [5, 6]
+    },
+    {
+      "name": "软件测试（双语）",
+      "teacher": "林诗薇",
+      "location": "建发0222",
+      "weekday": 1,
+      "startSection": 5,
+      "endSection": 6,
+      "startTime": "14:00",
+      "endTime": "15:35",
+      "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    },
+    {
+      "name": "团队激励与沟通",
+      "teacher": "叶文来",
+      "location": "建发0222",
+      "weekday": 4,
+      "startSection": 1,
+      "endSection": 2,
+      "startTime": "08:00",
+      "endTime": "09:35",
+      "weeks": [1, 2, 3, 4, 5, 6, 7, 8]
+    },
+    {
+      "name": "形势与政策 (6)",
+      "teacher": "朱宇",
+      "location": "线上学习（智慧树平台）",
+      "weekday": 6,
+      "startSection": 1,
+      "endSection": 2,
+      "startTime": "08:00",
+      "endTime": "09:35",
+      "weeks": [16]
+    },
+    {
+      "name": "形势与政策 (6)",
+      "teacher": "戴贵芬",
+      "location": "线上学习（智慧树平台）",
+      "weekday": 6,
+      "startSection": 1,
+      "endSection": 2,
+      "startTime": "08:00",
+      "endTime": "09:35",
+      "weeks": [15]
+    },
+    {
+      "name": "形势与政策 (6)",
+      "teacher": "朱宇",
+      "location": "建发0220",
+      "weekday": 1,
+      "startSection": 9,
+      "endSection": 10,
+      "startTime": "19:00",
+      "endTime": "20:35",
+      "weeks": [14]
+    },
+    {
+      "name": "形势与政策 (6)",
+      "teacher": "戴贵芬",
+      "location": "建发0220",
+      "weekday": 1,
+      "startSection": 9,
+      "endSection": 10,
+      "startTime": "19:00",
+      "endTime": "20:35",
+      "weeks": [13]
+    }
+  ]
+}

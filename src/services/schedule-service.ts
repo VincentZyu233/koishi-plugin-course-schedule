@@ -125,18 +125,33 @@ export class ScheduleService {
         items.push(view)
       } else {
         const sample = userCourses[0]
-        this.log(`[group]     无代表课程, 使用 nocourse`)
-        items.push({
-          userid,
-          username: sample.username,
-          useravatar: sample.useravatar,
-          courseName: dayOffset === 0 ? '今日无课' : '所选日期无课',
-          startTime: '',
-          endTime: '',
-          location: '',
-          status: 'nocourse',
-          statusDetail: '',
-        })
+        if (dayOffset === 0) {
+          this.log(`[group]     无代表课程, 今日所有课程已结束`)
+          items.push({
+            userid,
+            username: sample.username,
+            useravatar: sample.useravatar,
+            courseName: '已结束',
+            startTime: '',
+            endTime: '',
+            location: '',
+            status: 'finished',
+            statusDetail: '今日所有课程已结束',
+          })
+        } else {
+          this.log(`[group]     无代表课程, 使用 nocourse`)
+          items.push({
+            userid,
+            username: sample.username,
+            useravatar: sample.useravatar,
+            courseName: '所选日期无课',
+            startTime: '',
+            endTime: '',
+            location: '',
+            status: 'nocourse',
+            statusDetail: '',
+          })
+        }
       }
     }
 
@@ -272,7 +287,7 @@ export class ScheduleService {
       }
     }
 
-    return nextCourse ?? courses[0] ?? null
+    return nextCourse ?? null
   }
 
   private toDayCourseView(course: CourseRecord, dayOffset: number): DayCourseView {

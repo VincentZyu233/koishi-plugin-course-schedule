@@ -47,8 +47,9 @@
 | 格式 | 说明 |
 |------|------|
 | **WakeUp 课程表** | 直接发送 WakeUp 分享口令即可导入 |
-| **星链课表** | 支持星链课表分享码和 JSON 格式 |
-| **拾光课表 / 原生 JSON** | 粘贴课表 JSON 文本直接导入 |
+| **星链课表** | 支持星链课表分享码和 JSON 格式（[格式说明](docs/各种课表格式/星链课表JSON格式.md)） |
+| **[Yunzai 插件](https://github.com/Temmie0125/Yunzai-Schedule-Plugin)原生 JSON** | 兼容 Yunzai Schedule Plugin 的原生 JSON 格式，时间信息直接存储，**推荐手动构造课表时使用**（[格式说明](docs/各种课表格式/Yunzai-Schedule-Plugin原生JSON格式.md)） |
+| **拾光课表 JSON** | 兼容拾光课程表 App 的导出 JSON |
 | **WakeUp 备份文件** | 支持 `.wakeup_schedule` 备份文件导入 |
 | **ICS 文件/链接** | 支持 `.ics` 文件上传或 ICS 链接下载解析 |
 
