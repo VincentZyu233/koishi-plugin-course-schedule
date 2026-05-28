@@ -41,11 +41,12 @@ export const usage = `
 <h3>📥 适配情况</h3>
 <table>
   <tr><th>格式</th><th>说明</th><th>状态</th><th>指令</th></tr>
-  <tr><td><b>WakeUp 课程表</b></td><td>直接发送 WakeUp 分享口令即可导入</td><td>✅ 实测可用</td><td>课表.绑定</td></tr>
+  <tr><td><b>WakeUp 分享口令</b></td><td>发送分享口令即可导入。⚠️ 需使用旧版 6.0.x，建议 6.0.23。📤 获取：右上角分享图标 → 在线分享课表 → 点击复制/分享</td><td>✅ 实测可用</td><td>课表.绑定</td></tr>
   <tr><td><b>WakeUp 备份文件</b></td><td>支持 <code>.wakeup_schedule</code> 备份文件导入</td><td>⏳ 待测/待完善</td><td>课表.绑定</td></tr>
-  <tr><td><b>星链课表</b></td><td>支持星链课表分享码和 JSON 格式</td><td>✅ 实测可用</td><td>课表.绑定</td></tr>
+  <tr><td><b>星链分享码</b></td><td>发送星链分享码即可导入。📤 获取：右上角竖着的三个点 → 倒数第二行 分享课表 → 在线分享 → 点击复制分享码</td><td>✅ 实测可用</td><td>课表.绑定</td></tr>
+  <tr><td><b>星链 JSON</b></td><td>粘贴星链课表 JSON。📤 获取：右上角竖着的三个点 → 倒数第二行 分享课表 → 导出课表文件 → 发送到聊天平台</td><td>✅ 实测可用</td><td>课表.绑定</td></tr>
   <tr><td><b>星链格式时间表</b></td><td>通过自定义时间段 JSON 上传，绑定星链课表时自动应用</td><td>✅ 实测可用</td><td>课表.设置星链时间表</td></tr>
-  <tr><td><b>[Yunzai 插件]原生 JSON</b></td><td>兼容 Yunzai Schedule Plugin 的原生 JSON 格式，时间信息直接存储</td><td>✅ 实测可用</td><td>课表.绑定</td></tr>
+  <tr><td><b><a href="https://github.com/Temmie0125/Yunzai-Schedule-Plugin" style="text-decoration: underline;"><i>【Yunzai 插件】</i></a>原生 JSON</b></td><td>兼容 Yunzai Schedule Plugin 的原生 JSON 格式，时间信息直接存储，<b>推荐手动构造课表时使用</b>（比如截图本学期全部课表图片（如果你的教务平台支持的话），然后让识图 AI 转换成 Yunzai JSON 格式，需要同时让 AI 参考 <a href="https://github.com/Temmie0125/Yunzai-Schedule-Plugin" style="text-decoration: underline;"><i>【Yunzai 插件源代码】</i></a> 或 <a href="https://gitee.com/vincent-zyu/koishi-plugin-course-schedule/blob/main/docs/各种课表格式/Yunzai-Schedule-Plugin原生JSON格式.md" style="text-decoration: underline;"><i>【Yunzai插件原生JSON格式说明文档】</i></a>）</td><td>✅ 实测可用</td><td><code>课表.绑定</code></td></tr>
   <tr><td><b>拾光课表 JSON</b></td><td>兼容拾光课程表 App 的导出 JSON</td><td>⏳ 待测/待完善</td><td>课表.绑定</td></tr>
   <tr><td><b>ICS 文件/链接</b></td><td>支持 <code>.ics</code> 文件上传或 ICS 链接下载解析</td><td>⏳ 待测/待完善</td><td>课表.绑定</td></tr>
 </table>

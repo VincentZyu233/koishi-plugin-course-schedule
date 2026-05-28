@@ -46,11 +46,12 @@
 
 | 格式 | 说明 | 状态 | 指令 |
 |------|------|:----:|------|
-| **WakeUp 课程表** | 直接发送 WakeUp 分享口令即可导入 | ✅ 实测可用 | 课表.绑定 |
+| **WakeUp 分享口令** | 发送分享口令即可导入。⚠️ 需使用旧版 6.0.x，建议 6.0.23。📤 获取：右上角分享图标 → 在线分享课表 → 点击复制/分享 | ✅ 实测可用 | 课表.绑定 |
 | **WakeUp 备份文件** | 支持 `.wakeup_schedule` 备份文件导入 | ⏳ 待测/待完善 | 课表.绑定 |
-| **星链课表** | 支持星链课表分享码和 JSON 格式（[格式说明](docs/各种课表格式/星链课表JSON格式.md)） | ✅ 实测可用 | 课表.绑定 |
+| **星链分享码** | 发送星链分享码即可导入。📤 获取：右上角竖着的三个点 → 倒数第二行 分享课表 → 在线分享 → 点击复制分享码 | ✅ 实测可用 | 课表.绑定 |
+| **星链 JSON** | 粘贴星链课表 JSON。📤 获取：右上角竖着的三个点 → 倒数第二行 分享课表 → 导出课表文件 → 发送到聊天平台（[格式说明](docs/各种课表格式/星链课表JSON格式.md)） | ✅ 实测可用 | 课表.绑定 |
 | **星链格式时间表** | 通过自定义时间段 JSON 上传，绑定星链课表时自动应用 | ✅ 实测可用 | 课表.设置星链时间表 |
-| **[Yunzai 插件](https://github.com/Temmie0125/Yunzai-Schedule-Plugin)原生 JSON** | 兼容 Yunzai Schedule Plugin 的原生 JSON 格式，时间信息直接存储，**推荐手动构造课表时使用**（[格式说明](docs/各种课表格式/Yunzai-Schedule-Plugin原生JSON格式.md)） | ✅ 实测可用 | 课表.绑定 |
+| **[Yunzai 插件](https://github.com/Temmie0125/Yunzai-Schedule-Plugin)原生 JSON** | 兼容 Yunzai Schedule Plugin 的原生 JSON 格式，时间信息直接存储，**推荐手动构造课表时使用**（比如截图本学期全部课表图片（如果你的教务平台支持的话），然后让识图 AI 转换成 Yunzai JSON 格式，需要同时让 AI 参考 [Yunzai 插件源代码](https://github.com/Temmie0125/Yunzai-Schedule-Plugin) 或 [JSON 格式说明文档](docs/各种课表格式/Yunzai-Schedule-Plugin原生JSON格式.md)） | ✅ 实测可用 | 课表.绑定 |
 | **拾光课表 JSON** | 兼容拾光课程表 App 的导出 JSON | ⏳ 待测/待完善 | 课表.绑定 |
 | **ICS 文件/链接** | 支持 `.ics` 文件上传或 ICS 链接下载解析 | ⏳ 待测/待完善 | 课表.绑定 |
 
