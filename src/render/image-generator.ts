@@ -10,7 +10,7 @@ import {
 } from './template'
 import { renderWeeklyScheduleTemplate } from './weekly-template'
 import type { DayCourseView, RankingItem, WeeklyDayView } from '../types'
-import type { RenderColors } from '../config'
+import type { RenderColors, Config } from '../config'
 import { defaultColors } from '../config'
 
 export class ImageGenerator {
@@ -20,6 +20,7 @@ export class ImageGenerator {
   private verbose = false
   private colors: RenderColors
   private footerText = ''
+  private nameDisplayStyle: Config['nameDisplayStyle']
 
   constructor(
     private ctx: Context,
@@ -28,11 +29,13 @@ export class ImageGenerator {
     verbose = false,
     colors?: RenderColors,
     footerText = '',
+    nameDisplayStyle: Config['nameDisplayStyle'] = 'name-card',
   ) {
     this.fontPath = fontPath
     this.verbose = verbose
     this.colors = colors ?? defaultColors
     this.footerText = footerText
+    this.nameDisplayStyle = nameDisplayStyle
     if (!fontPath) return
     try {
       if (!fs.existsSync(fontPath)) {
@@ -51,14 +54,14 @@ export class ImageGenerator {
     this.log('[render] 个人课表, 课程数=', items.length)
     const title = `我的课表 · ${targetDate.toLocaleDateString('zh-CN')}`
     const timestamp = this.getTimestamp()
-    return this.renderHtml(renderPersonalScheduleTemplate(items, title, timestamp, this.fontName, this.colors, this.footerText), '个人课表')
+    return this.renderHtml(renderPersonalScheduleTemplate(items, title, timestamp, this.fontName, this.colors, this.footerText, this.nameDisplayStyle), '个人课表')
   }
 
   async renderGroupSchedule(items: DayCourseView[], targetDate: Date) {
     this.log('[render] 群课表, 用户数=', items.length)
     const logFn = this.verbose ? (...args: unknown[]) => this.log('[render][verbose]', ...args) : undefined
     const timestamp = this.getTimestamp()
-    const html = renderGroupScheduleTemplate(items, '群友在上什么课?', this.fontName, this.colors, logFn, this.footerText, timestamp)
+    const html = renderGroupScheduleTemplate(items, '群友在上什么课?', this.fontName, this.colors, logFn, this.footerText, timestamp, this.nameDisplayStyle)
     this.log('[render] 群课表HTML已生成, length=', html.length)
     return this.renderHtml(html, '群课表')
   }
@@ -66,13 +69,13 @@ export class ImageGenerator {
   async renderRanking(items: RankingItem[], dateRange: string) {
     this.log('[render] 排行, 人数=', items.length)
     const timestamp = this.getTimestamp()
-    return this.renderHtml(renderRankingTemplate(items, dateRange, this.fontName, this.footerText, timestamp), '排行')
+    return this.renderHtml(renderRankingTemplate(items, dateRange, this.fontName, this.footerText, timestamp, this.nameDisplayStyle), '排行')
   }
 
-  async renderWeeklySchedule(nickname: string, week: number, dateRange: string, days: WeeklyDayView[]) {
+  async renderWeeklySchedule(username: string, nickname: string, week: number, dateRange: string, days: WeeklyDayView[]) {
     this.log('[render] 周课表, 周数=', week, '天数=', days.length)
     const timestamp = this.getTimestamp()
-    return this.renderHtml(renderWeeklyScheduleTemplate(nickname, week, dateRange, days, timestamp, this.fontName, this.colors, this.footerText), '周课表')
+    return this.renderHtml(renderWeeklyScheduleTemplate(username, nickname, week, dateRange, days, timestamp, this.fontName, this.colors, this.footerText, this.nameDisplayStyle), '周课表')
   }
 
   private getTimestamp(): string {

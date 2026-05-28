@@ -3,6 +3,7 @@ export interface CourseRecord {
   channelId: string
   userid: string
   username: string
+  nickname?: string
   useravatar: string
   curriculumndate: string[]
   curriculumname: string
@@ -24,6 +25,7 @@ export interface CourseRecord {
 export interface CourseSummary {
   userid: string
   username: string
+  nickname?: string
   useravatar: string
   courseName: string
   startTime: string
@@ -39,6 +41,7 @@ export interface BindResult {
 export interface DayCourseView {
   userid: string
   username: string
+  nickname?: string
   useravatar: string
   courseName: string
   startTime: string
@@ -51,6 +54,7 @@ export interface DayCourseView {
 export interface RankingItem {
   userid: string
   username: string
+  nickname?: string
   useravatar: string
   totalMinutes: number
   courseCount: number
@@ -79,6 +83,7 @@ export interface WeeklyDayView {
 export interface TargetUser {
   userId: string
   username: string
+  nickname: string
   useravatar: string
 }
 

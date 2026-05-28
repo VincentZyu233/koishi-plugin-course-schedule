@@ -55,6 +55,9 @@ export interface Config {
   // 🎨 渲染颜色设置
   renderColors: RenderColors
 
+  // 🎭 用户名显示样式
+  nameDisplayStyle: 'name-only' | 'name-card' | 'card-name' | 'card-only'
+
   // 🐛 调试设置
   verboseConsoleLog: boolean
 }
@@ -106,8 +109,32 @@ export const Config: Schema<Config> = Schema.intersect([
     renderColors: RenderColorsSchema,
   }).role('table').default({ renderColors: defaultColors }).description('🎨 渲染颜色设置'),
 
+  // 🎭 用户名显示样式
+  Schema.object({
+    nameDisplayStyle: Schema.union([
+      Schema.const('name-only').description('🏷️ 只显示用户名'),
+      Schema.const('name-card').description('🏷️🪪 用户名（群名片）'),
+      Schema.const('card-name').description('🪪🏷️ 群名片（用户名）'),
+      Schema.const('card-only').description('🪪 只显示群名片'),
+    ]).default('name-card').description('🎭 用户名显示样式<br/><i>（群名片为空时始终显示用户名）</i>'),
+  }).description('🎭 用户名显示样式'),
+
   // 🐛 调试设置
   Schema.object({
     verboseConsoleLog: Schema.boolean().default(false).description('📋 详细控制台调试日志'),
   }).description('🐛 调试设置'),
 ])
+
+export function formatDisplayName(username: string, nickname: string | undefined, style: Config['nameDisplayStyle']): string {
+  if (!nickname) return username || '未知用户'
+  switch (style) {
+    case 'card-only':
+      return nickname
+    case 'name-card':
+      return `${username}（${nickname}）`
+    case 'card-name':
+      return `${nickname}（${username}）`
+    default:
+      return username
+  }
+}

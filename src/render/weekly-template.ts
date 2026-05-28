@@ -1,6 +1,6 @@
 import type { WeeklyDayView } from '../types'
-import type { RenderColors } from '../config'
-import { defaultColors } from '../config'
+import type { RenderColors, Config } from '../config'
+import { defaultColors, formatDisplayName } from '../config'
 
 function esc(v: string) {
   return v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
@@ -9,6 +9,7 @@ function esc(v: string) {
 function ff(name: string) { return name ? `'${name}',` : '' }
 
 export function renderWeeklyScheduleTemplate(
+  username: string,
   nickname: string,
   week: number,
   dateRange: string,
@@ -17,7 +18,9 @@ export function renderWeeklyScheduleTemplate(
   fontName = '',
   colors: RenderColors = defaultColors,
   footerText = '',
+  nameDisplayStyle: Config['nameDisplayStyle'] = 'name-card',
 ) {
+  const displayName = formatDisplayName(username, nickname, nameDisplayStyle)
   const dayBlocks = days.map((day) => {
     const holidayTag = day.isHoliday ? ` [${esc(day.holidayName)}]` : day.isWorkdayOnWeekend ? ` [${esc(day.holidayName)}]` : ''
     const todayTag = day.isToday ? ' (今天)' : ''
@@ -59,7 +62,7 @@ body{width:1200px;background:#FFF;font-family:${ff(fontName)}"Microsoft YaHei","
 .ff{margin-top:4px;font-size:12px;white-space:pre-line}
 </style></head><body>
 <div class="ac"></div>
-<div class="ht">${esc(nickname)} 的每周课表</div>
+<div class="ht">${esc(displayName)} 的每周课表</div>
 <div class="sb">第 ${week} 周 · ${esc(dateRange)}</div>
 ${dayBlocks}
 ${footerHtml}

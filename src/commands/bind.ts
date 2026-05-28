@@ -22,9 +22,20 @@ export function registerBindCommand(
     .example(`${config.baseCommand}.${config.bindCommand} 这是来自「WakeUp课程表」的课表分享......分享口令为「xxxxxxxx」`)
     .example(`${config.baseCommand}.${config.bindCommand} https://example.com/course.ics`)
     .action(async ({ session }, text) => {
+      let realName = session.username || session.userId
+      let groupNick = ''
+      try {
+        const member = await session.bot.getGuildMember(session.guildId, session.userId)
+        if (member?.user?.name) realName = member.user.name
+        if (member?.nick) groupNick = member.nick
+      } catch {
+        services.log('[bind] 无法获取用户信息，使用默认值')
+      }
+
       const targetUser: TargetUser = {
         userId: session.userId,
-        username: session.username || session.userId,
+        username: realName,
+        nickname: groupNick,
         useravatar: session.event.user?.avatar ?? '',
       }
 

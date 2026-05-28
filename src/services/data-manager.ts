@@ -14,6 +14,7 @@ export class DataManager {
       channelId: 'string',
       userid: 'string',
       username: 'string',
+      nickname: 'string',
       useravatar: 'string',
       curriculumndate: 'json',
       curriculumname: 'string',

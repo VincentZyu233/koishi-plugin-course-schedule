@@ -90,6 +90,7 @@ export class WakeupFileParser {
         channelId,
         userid: targetUser.userId,
         username: targetUser.username,
+        nickname: targetUser.nickname,
         useravatar: targetUser.useravatar,
         curriculumndate: [weekday],
         curriculumname: courseInfo.courseName,

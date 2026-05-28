@@ -16,6 +16,8 @@ import {
   getWeekNumberFromDate,
 } from '../utils/date'
 
+export type NameMap = Map<string, { username: string; nickname: string }>
+
 export class ScheduleService {
   constructor(
     private ctx: Context,
@@ -41,7 +43,7 @@ export class ScheduleService {
     return courses
   }
 
-  async renderPersonalSchedule(channelId: string, userid: string, dayOffset = 0) {
+  async renderPersonalSchedule(channelId: string, userid: string, dayOffset = 0, nameMap?: NameMap) {
     const targetDate = getDayOffsetDate(dayOffset)
     const currentWeekday = weekdayNameOfDate(targetDate)
     const allCourses = await this.listUserCourses(channelId, userid)
@@ -62,11 +64,11 @@ export class ScheduleService {
       .sort((a, b) => a.curriculumtime.localeCompare(b.curriculumtime, 'zh-CN'))
 
     this.log('[schedule] renderPersonalSchedule, 总数=', allCourses.length, '筛选后=', courses.length)
-    const items = courses.map(course => this.toDayCourseView(course, dayOffset))
+    const items = courses.map(course => this.toDayCourseView(course, dayOffset, nameMap))
     return this.imageGenerator.renderPersonalSchedule(items, targetDate)
   }
 
-  async renderChannelSchedule(channelId: string, dayOffset = 0) {
+  async renderChannelSchedule(channelId: string, dayOffset = 0, nameMap?: NameMap) {
     const targetDate = getDayOffsetDate(dayOffset)
     const weekday = weekdayNameOfDate(targetDate)
     const courses = await this.listChannelCourses(channelId)
@@ -126,16 +128,18 @@ export class ScheduleService {
       const active = this.pickRepresentativeCourse(userCourses, dayOffset)
       if (active) {
         this.log(`[group]     代表课程: ${active.curriculumname} | ${active.curriculumtime} | ${active.location}`)
-        const view = this.toDayCourseView(active, dayOffset)
+        const view = this.toDayCourseView(active, dayOffset, nameMap)
         this.log(`[group]     DayCourseView: courseName=${view.courseName}, startTime=${view.startTime}, endTime=${view.endTime}, location=${view.location}, status=${view.status}`)
         items.push(view)
       } else {
         const sample = userCourses[0]
+        const nameInfo = nameMap?.get(userid) ?? { username: sample.username, nickname: sample.nickname ?? '' }
         if (dayOffset === 0) {
           this.log(`[group]     无代表课程, 今日所有课程已结束`)
           items.push({
             userid,
-            username: sample.username,
+            username: nameInfo.username,
+            nickname: nameInfo.nickname,
             useravatar: sample.useravatar,
             courseName: '已结束',
             startTime: '',
@@ -148,7 +152,8 @@ export class ScheduleService {
           this.log(`[group]     无代表课程, 使用 nocourse`)
           items.push({
             userid,
-            username: sample.username,
+            username: nameInfo.username,
+            nickname: nameInfo.nickname,
             useravatar: sample.useravatar,
             courseName: '所选日期无课',
             startTime: '',
@@ -167,7 +172,7 @@ export class ScheduleService {
     return this.imageGenerator.renderGroupSchedule(items, targetDate)
   }
 
-  async getWeeklyRanking(channelId: string) {
+  async getWeeklyRanking(channelId: string, nameMap?: NameMap) {
     const courses = await this.listChannelCourses(channelId)
     const semesterStart = this.getSemesterStart(courses)
     const week = getWeekRange(new Date())
@@ -182,9 +187,11 @@ export class ScheduleService {
       for (const day of week.days) {
         if (!isCourseActiveOnDate(course, day.date, day.weekday, semesterStart)) continue
         if (!weekdays.includes(day.weekday)) continue
+        const nameInfo = nameMap?.get(course.userid) ?? { username: course.username, nickname: course.nickname ?? '' }
         const item = ranking.get(course.userid) ?? {
           userid: course.userid,
-          username: course.username,
+          username: nameInfo.username,
+          nickname: nameInfo.nickname,
           useravatar: course.useravatar,
           totalMinutes: 0,
           courseCount: 0,
@@ -198,15 +205,15 @@ export class ScheduleService {
     return Array.from(ranking.values()).sort((a, b) => b.totalMinutes - a.totalMinutes)
   }
 
-  async renderWeeklyRanking(channelId: string) {
-    const ranking = await this.getWeeklyRanking(channelId)
+  async renderWeeklyRanking(channelId: string, nameMap?: NameMap) {
+    const ranking = await this.getWeeklyRanking(channelId, nameMap)
     this.log('[schedule] renderWeeklyRanking, 参与人数=', ranking.length)
     const week = getWeekRange(new Date())
     const dateRange = `${week.days[0].date.toLocaleDateString('zh-CN')} - ${week.days[6].date.toLocaleDateString('zh-CN')}`
     return this.imageGenerator.renderRanking(ranking, dateRange)
   }
 
-  async renderWeeklySchedule(channelId: string, userid: string, weekNumber?: number) {
+  async renderWeeklySchedule(channelId: string, userid: string, weekNumber?: number, nameMap?: NameMap) {
     const allCourses = await this.listUserCourses(channelId, userid)
     if (!allCourses.length) return null
 
@@ -266,9 +273,11 @@ export class ScheduleService {
       dateRange = `${monDate.toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })} - ${sunDate.toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' })}`
     }
 
-    const username = allCourses[0]?.username ?? `用户 ${userid}`
+    const nameInfo = nameMap?.get(userid)
+    const username = nameInfo?.username ?? allCourses[0]?.username ?? `用户 ${userid}`
+    const nickname = nameInfo?.nickname ?? allCourses[0]?.nickname ?? ''
     this.log('[schedule] renderWeeklySchedule, 周数=', week, '用户=', userid)
-    return this.imageGenerator.renderWeeklySchedule(username, week, dateRange, days)
+    return this.imageGenerator.renderWeeklySchedule(username, nickname, week, dateRange, days)
   }
 
   private getSemesterStart(courses: CourseRecord[]): string {
@@ -297,7 +306,7 @@ export class ScheduleService {
     return nextCourse ?? null
   }
 
-  private toDayCourseView(course: CourseRecord, dayOffset: number): DayCourseView {
+  private toDayCourseView(course: CourseRecord, dayOffset: number, nameMap?: NameMap): DayCourseView {
     const [startTime, endTime] = course.curriculumtime.split('-')
     const currentMinutes = new Date().getHours() * 60 + new Date().getMinutes()
     const start = this.timeToMinutes(startTime)
@@ -315,9 +324,11 @@ export class ScheduleService {
       }
     }
 
+    const nameInfo = nameMap?.get(course.userid) ?? { username: course.username, nickname: course.nickname ?? '' }
     return {
       userid: course.userid,
-      username: course.username,
+      username: nameInfo.username,
+      nickname: nameInfo.nickname,
       useravatar: course.useravatar,
       courseName: course.curriculumname,
       startTime,

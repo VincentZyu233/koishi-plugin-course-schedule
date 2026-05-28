@@ -1,7 +1,7 @@
 import { FALLBACK_AVATAR } from '../constants'
 import type { DayCourseView, RankingItem } from '../types'
-import type { RenderColors } from '../config'
-import { defaultColors } from '../config'
+import type { RenderColors, Config } from '../config'
+import { defaultColors, formatDisplayName } from '../config'
 
 function esc(v: string) {
   return v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
@@ -25,12 +25,13 @@ function makeStatus(colors: RenderColors) {
   }
 }
 
-export function renderGroupScheduleTemplate(items: DayCourseView[], title: string, fontName = '', colors: RenderColors = defaultColors, logFn?: (...args: unknown[]) => void, footerText = '', timestamp = '') {
+export function renderGroupScheduleTemplate(items: DayCourseView[], title: string, fontName = '', colors: RenderColors = defaultColors, logFn?: (...args: unknown[]) => void, footerText = '', timestamp = '', nameDisplayStyle: Config['nameDisplayStyle'] = 'name-card') {
   const S = makeStatus(colors)
   if (logFn) logFn('[template] 群课表模板渲染: 共', items.length, '个 item')
   const rows = items.map((item, idx) => {
     const s = S[item.status]
     const y = 160 + idx * 120
+    const displayName = formatDisplayName(item.username, item.nickname, nameDisplayStyle)
     const summary = [item.courseName, item.location].filter(Boolean).join(' @ ')
     const timeInfo = [item.startTime && item.endTime ? `${item.startTime}-${item.endTime}` : '', item.statusDetail].filter(Boolean).join(' ')
     if (logFn) logFn(`[template]   item${idx}: summary="${summary}", timeInfo="${timeInfo}", status=${s.label}, bg=${s.bg}`)
@@ -38,7 +39,7 @@ export function renderGroupScheduleTemplate(items: DayCourseView[], title: strin
     <div class="row" style="top:${y}px">
       <img class="av" src="${esc(item.useravatar || FALLBACK_AVATAR)}" alt="">
       <div class="ar"></div>
-      <div class="nn" style="top:15px">${esc(item.username)}</div>
+      <div class="nn" style="top:15px">${esc(displayName)}</div>
       <div class="mc" style="top:55px">
         <div class="mr">
           <div class="bd" style="background:${s.bg};color:${s.fg}">${s.label}</div>
@@ -79,7 +80,7 @@ body{width:1200px;background:#FFF;font-family:${ff(fontName)}"Microsoft YaHei","
 </div></body></html>`
 }
 
-export function renderPersonalScheduleTemplate(items: DayCourseView[], title: string, timestamp: string, fontName = '', colors: RenderColors = defaultColors, footerText = '') {
+export function renderPersonalScheduleTemplate(items: DayCourseView[], title: string, timestamp: string, fontName = '', colors: RenderColors = defaultColors, footerText = '', _nameDisplayStyle: Config['nameDisplayStyle'] = 'name-card') {
   const cards = items.map(item => {
     const lines = [item.courseName, item.location].filter(Boolean)
     const extra = [item.startTime && item.endTime ? `${item.startTime}-${item.endTime}` : '', item.statusDetail].filter(Boolean).join(' ')
@@ -110,17 +111,18 @@ ${footerHtml}
 </body></html>`
 }
 
-export function renderRankingTemplate(items: RankingItem[], dateRange: string, fontName = '', footerText = '', timestamp = '') {
+export function renderRankingTemplate(items: RankingItem[], dateRange: string, fontName = '', footerText = '', timestamp = '', nameDisplayStyle: Config['nameDisplayStyle'] = 'name-card') {
   const rows = items.map((item, i) => {
     const r = i + 1
     const c = r === 1 ? '#FBBF24' : r === 2 ? '#9CA3AF' : r === 3 ? '#F59E0B' : '#374151'
     const h = Math.floor(item.totalMinutes / 60)
     const m = item.totalMinutes % 60
+    const displayName = formatDisplayName(item.username, item.nickname, nameDisplayStyle)
     return `
     <div class="rr${i % 2 === 1 ? ' e' : ''}">
       <div class="rn" style="color:${c}">${r}</div>
       <img class="ra" src="${esc(item.useravatar || FALLBACK_AVATAR)}" alt="">
-      <div class="rnm">${esc(item.username)}</div>
+      <div class="rnm">${esc(displayName)}</div>
       <div class="rs"><div class="rd">${h}h ${m}m</div><div class="rc">${item.courseCount} 节</div></div>
     </div>`
   }).join('')
