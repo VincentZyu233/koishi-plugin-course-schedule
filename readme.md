@@ -82,7 +82,7 @@
 >   - [![Release APK - GitHub](https://img.shields.io/badge/Release_APK-GitHub-181717?style=flat-square&logo=github)](https://github.com/VincentZyuApps/koishi-plugin-course-schedule/releases/download/WakeUp6.0.23/WakeUp_6.0.23.apk)
 >   - [![Release APK - Gitee](https://img.shields.io/badge/Release_APK-Gitee-C71D23?style=flat-square&logo=gitee)](https://gitee.com/vincent-zyu/koishi-plugin-course-schedule/releases/download/WakeUp6.0.23/WakeUp_6.0.23.apk)
 > - **星链课表** — _对于作者自己的学校教务网站_：没有直接的学校教务导入选项，通用的 AI 导入工具也无法使用。作者目前的导入方式：浏览器 F12 下载课表 HTML 数据 → 让 AI（如 OpenCode / Codex / Gemini）参考本地 HTML 结构与课表截图识别，生成符合星链 JSON 格式的文件 → 复制 JSON → 星链 App 右上角「+」→ 一键导课 → 粘贴 JSON → 点击 AI 解析即可完成导入。
->   - 💡 **时间修改提示**：由于作者学校的教务课表网站不显示时间，需要手动在星链 App 内修改每节课的时间：右上角竖着的三个点 → 上课时间 → 点击时间表 → ✏️ 编辑符号 → 修改时间
+>   - 💡 **时间修改提示**：星链的分享码或JSON导出不包含时间信息，每节课的时间信息需要单独导出。请使用「课表.设置星链时间表」上传时间表 JSON。📤 导出方法：星链 App 右上角竖着的三个点 → 上课时间 → 点击时间表 → ✏️ 编辑符号 → 修改时间，然后点击分享符号导出时间 JSON
 > - **拾光课程表** — 作者暂时无法成功导入
 >
 > 如果你遇到了导入问题，欢迎加群反馈，帮助逐步完善适配 🙏 艾特作者回复更快哦~ @VincentZyu

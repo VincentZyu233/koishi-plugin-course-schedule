@@ -99,6 +99,14 @@ export function registerBindCommand(
       }
       services.log('[bind] 写入完成, 共', courses.length, '门课程')
 
+      if (config.starlinkTimeHint && courses[0]?.source === 'starlink') {
+        const quote = config.enableQuote ? h.quote(session.messageId) : ''
+        const hintText = config.starlinkTimeHintText
+          .replace(/\{baseCommand\}/g, config.baseCommand)
+          .replace(/\{timetableCommand\}/g, config.timetableCommand)
+        session.send(`${quote}${hintText}`)
+      }
+
       const doQuote = config.enableQuote ? h.quote(session.messageId) : ''
       return [doQuote, `✅ 已导入 ${courses.length} 门课程。`]
     })

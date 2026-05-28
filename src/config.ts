@@ -29,6 +29,8 @@ export interface Config {
   // 💬 消息设置
   enableQuote: boolean
   enableWatingHint: boolean
+  starlinkTimeHint: boolean
+  starlinkTimeHintText: string
   bindPromptText: string
 
   // ⚙️ 指令设置
@@ -63,6 +65,8 @@ export const Config: Schema<Config> = Schema.intersect([
   Schema.object({
     enableQuote: Schema.boolean().default(true).description('💬 开启后，本插件发送的所有消息都会引用回复触发指令的消息'),
     enableWatingHint: Schema.boolean().default(true).description('⏳ 是否启用「渲染中，请稍候...」提示消息'),
+    starlinkTimeHint: Schema.boolean().default(true).description('⭐ 检测到星链课表时，回复提示消息引导用户使用设置星链时间表命令'),
+    starlinkTimeHintText: Schema.string().default('⭐ 星链的分享码或JSON导出不包含时间信息，每节课的时间信息需要单独导出。\n\n请使用「{baseCommand}.{timetableCommand}」上传时间表 JSON。\n\n📤 导出方法：星链 App 右上角竖着的三个点 → 上课时间 → 点击时间表 → ✏️ 编辑符号 → 修改时间，然后点击分享符号导出时间 JSON').role('textarea', { rows: [3, 10] }).description('📝 检测到星链课表时发送的提示文本（支持换行，可用 {baseCommand} 和 {timetableCommand} 占位符）'),
     bindPromptText: Schema.string().default('📥 请发送 WakeUp 分享文本、ICS 文本、课表 JSON，或附带 .ics/.json/.wakeup_schedule 文件。\n\n⚠️ 注意：WakeUp 课程表高版本已对 API 加强限制 🔒，版本号高于 6.1.x 的 WakeUp 课程表无法通过分享口令绑定。\n\n🔧 推荐降级到作者测试过的同款版本 6.0.23 ⬇️：\nhttps://gitee.com/vincent-zyu/koishi-plugin-course-schedule/releases/download/WakeUp6.0.23/WakeUp_6.0.23.apk').role('textarea', { rows: [3, 10] }).description('📝 绑定指令触发交互式等待时发送的提示文本（支持换行）'),
   }).description('💬 消息设置'),
 
