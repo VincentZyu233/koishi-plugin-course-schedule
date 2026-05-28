@@ -38,21 +38,26 @@ export const usage = `
 <h2>🎓 功能简介</h2>
 <p>课程表插件 —— 群u在上什么课捏？支持多格式课表导入、个人课表查看、群课表纵览、本周上课排行和周课表视图。</p>
 
-<h3>📥 支持导入的格式</h3>
-<ul>
-  <li><b>WakeUp 课程表</b> —— 直接发送 WakeUp 分享口令即可导入</li>
-  <li><b>WakeUp 备份文件</b> —— 支持 <code>.wakeup_schedule</code> 备份文件导入</li>
-  <li><b>星链课表</b> —— 支持星链课表分享码和 JSON 格式</li>
-  <li><b>星链格式时间表</b> —— 通过 <code>课表.设置星链时间表</code> 上传自定义时间段 JSON，绑定星链课表时自动应用</li>
-  <li><b>[Yunzai 插件]原生 JSON</b> —— 兼容 Yunzai Schedule Plugin 的原生 JSON 格式，时间信息直接存储</li>
-  <li><b>拾光课表 JSON</b> —— 兼容拾光课程表 App 的导出 JSON</li>
-  <li><b>ICS 文件/链接</b> —— 支持 <code>.ics</code> 文件上传或 ICS 链接下载解析</li>
-</ul>
+<h3>📥 适配情况</h3>
+<table>
+  <tr><th>格式</th><th>说明</th><th>状态</th><th>指令</th></tr>
+  <tr><td><b>WakeUp 课程表</b></td><td>直接发送 WakeUp 分享口令即可导入</td><td>✅ 实测可用</td><td>课表.绑定</td></tr>
+  <tr><td><b>WakeUp 备份文件</b></td><td>支持 <code>.wakeup_schedule</code> 备份文件导入</td><td>⏳ 待测/待完善</td><td>课表.绑定</td></tr>
+  <tr><td><b>星链课表</b></td><td>支持星链课表分享码和 JSON 格式</td><td>✅ 实测可用</td><td>课表.绑定</td></tr>
+  <tr><td><b>星链格式时间表</b></td><td>通过自定义时间段 JSON 上传，绑定星链课表时自动应用</td><td>✅ 实测可用</td><td>课表.设置星链时间表</td></tr>
+  <tr><td><b>[Yunzai 插件]原生 JSON</b></td><td>兼容 Yunzai Schedule Plugin 的原生 JSON 格式，时间信息直接存储</td><td>✅ 实测可用</td><td>课表.绑定</td></tr>
+  <tr><td><b>拾光课表 JSON</b></td><td>兼容拾光课程表 App 的导出 JSON</td><td>⏳ 待测/待完善</td><td>课表.绑定</td></tr>
+  <tr><td><b>ICS 文件/链接</b></td><td>支持 <code>.ics</code> 文件上传或 ICS 链接下载解析</td><td>⏳ 待测/待完善</td><td>课表.绑定</td></tr>
+</table>
+<blockquote>
+✅ <b>实测可用</b> = 经过测试，功能正常可用<br>
+⏳ <b>待测/待完善</b> = 目前尚未支持/完善，未来可能支持，仍在计划中
+</blockquote>
 
 <h3>📋 可用命令</h3>
 <table>
   <tr><th>命令</th><th>说明</th><th>示例</th></tr>
-  <tr><td><code>课表.绑定 &lt;文本/文件&gt;</code></td><td>导入课表数据</td><td><code>课表.绑定 分享口令为「xxxxxxxx」</code></td></tr>
+  <tr><td><code>课表.绑定 &lt;文本&gt;</code></td><td>导入课表数据（建议使用文本：分享码/JSON，交互式传文件可能有问题）</td><td><code>课表.绑定 分享口令为「xxxxxxxx」</code></td></tr>
   <tr><td><code>课表.设置星链时间表</code></td><td>设置星链课表时间表</td><td><code>课表.设置星链时间表</code></td></tr>
   <tr><td><code>课表.查看 [天]</code></td><td>查看个人某天课程</td><td><code>课表.查看 明天</code></td></tr>
   <tr><td><code>课表.群课表 [天]</code></td><td>查看本群所有人某天的课程</td><td><code>课表.群课表 周三</code></td></tr>
