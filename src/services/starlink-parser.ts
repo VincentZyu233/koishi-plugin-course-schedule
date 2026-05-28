@@ -32,14 +32,16 @@ interface StarlinkCourse {
   endTime?: string
 }
 
+interface StarlinkResponseData {
+  tableName?: string
+  name?: string
+  startDate?: string
+  timeSlots?: StarlinkTimeSlot[]
+  courses?: StarlinkCourse[]
+}
+
 interface StarlinkApiResponse {
-  data?: {
-    tableName?: string
-    name?: string
-    startDate?: string
-    timeSlots?: StarlinkTimeSlot[]
-    courses?: StarlinkCourse[]
-  }
+  data?: StarlinkResponseData
 }
 
 const DEFAULT_TIME_SLOTS: StarlinkTimeSlot[] = [
@@ -75,7 +77,7 @@ export class StarlinkParser {
   }
 
   convertStarlinkJson(
-    data: StarlinkResponse,
+    data: StarlinkResponseData,
     channelId: string,
     targetUser: TargetUser,
     userTimeSlots?: UserTimeSlot[],

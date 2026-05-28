@@ -47,11 +47,11 @@
 | 格式 | 说明 |
 |------|------|
 | **WakeUp 课程表** | 直接发送 WakeUp 分享口令即可导入 |
+| **WakeUp 备份文件** | 支持 `.wakeup_schedule` 备份文件导入 |
 | **星链课表** | 支持星链课表分享码和 JSON 格式（[格式说明](docs/各种课表格式/星链课表JSON格式.md)） |
-| **用户自定义时间表** | 通过 `课表.设置星链时间表` 上传自定义时间段 JSON，绑定星链课表时自动应用 |
+| **星链格式时间表** | 通过 `课表.设置星链时间表` 上传自定义时间段 JSON，绑定星链课表时自动应用 |
 | **[Yunzai 插件](https://github.com/Temmie0125/Yunzai-Schedule-Plugin)原生 JSON** | 兼容 Yunzai Schedule Plugin 的原生 JSON 格式，时间信息直接存储，**推荐手动构造课表时使用**（[格式说明](docs/各种课表格式/Yunzai-Schedule-Plugin原生JSON格式.md)） |
 | **拾光课表 JSON** | 兼容拾光课程表 App 的导出 JSON |
-| **WakeUp 备份文件** | 支持 `.wakeup_schedule` 备份文件导入 |
 | **ICS 文件/链接** | 支持 `.ics` 文件上传或 ICS 链接下载解析 |
 
 ### 📋 可用命令
@@ -82,6 +82,7 @@
 >   - [![Release APK - GitHub](https://img.shields.io/badge/Release_APK-GitHub-181717?style=flat-square&logo=github)](https://github.com/VincentZyuApps/koishi-plugin-course-schedule/releases/download/WakeUp6.0.23/WakeUp_6.0.23.apk)
 >   - [![Release APK - Gitee](https://img.shields.io/badge/Release_APK-Gitee-C71D23?style=flat-square&logo=gitee)](https://gitee.com/vincent-zyu/koishi-plugin-course-schedule/releases/download/WakeUp6.0.23/WakeUp_6.0.23.apk)
 > - **星链课表** — _对于作者自己的学校教务网站_：没有直接的学校教务导入选项，通用的 AI 导入工具也无法使用。作者目前的导入方式：浏览器 F12 下载课表 HTML 数据 → 让 AI（如 OpenCode / Codex / Gemini）参考本地 HTML 结构与课表截图识别，生成符合星链 JSON 格式的文件 → 复制 JSON → 星链 App 右上角「+」→ 一键导课 → 粘贴 JSON → 点击 AI 解析即可完成导入。
+>   - 💡 **时间修改提示**：由于作者学校的教务课表网站不显示时间，需要手动在星链 App 内修改每节课的时间：右上角竖着的三个点 → 上课时间 → 点击时间表 → ✏️ 编辑符号 → 修改时间
 > - **拾光课程表** — 作者暂时无法成功导入
 >
 > 如果你遇到了导入问题，欢迎加群反馈，帮助逐步完善适配 🙏 艾特作者回复更快哦~ @VincentZyu

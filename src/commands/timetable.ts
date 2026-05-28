@@ -10,7 +10,7 @@ export function registerTimetableCommand(
   timeSlotManager: TimeSlotManager,
 ) {
   ctx.command(`${config.baseCommand}.${config.timetableCommand} [text:text]`, '📅 设置星链时间表')
-    .example(`${config.baseCommand}.${config.timetable} 请发送你的时间表 JSON`)
+    .example(`${config.baseCommand}.${config.timetableCommand} 请发送你的时间表 JSON`)
     .action(async ({ session }, text) => {
       const userId = session.userId
 

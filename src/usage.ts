@@ -41,10 +41,11 @@ export const usage = `
 <h3>📥 支持导入的格式</h3>
 <ul>
   <li><b>WakeUp 课程表</b> —— 直接发送 WakeUp 分享口令即可导入</li>
-  <li><b>星链课表</b> —— 支持星链课表分享码和 JSON 格式</li>
-  <li><b>用户自定义时间表</b> —— 通过 <code>课表.设置星链时间表</code> 上传，绑定星链课表时自动应用</li>
-  <li><b>拾光课表 / 原生 JSON</b> —— 粘贴课表 JSON 文本直接导入</li>
   <li><b>WakeUp 备份文件</b> —— 支持 <code>.wakeup_schedule</code> 备份文件导入</li>
+  <li><b>星链课表</b> —— 支持星链课表分享码和 JSON 格式</li>
+  <li><b>星链格式时间表</b> —— 通过 <code>课表.设置星链时间表</code> 上传自定义时间段 JSON，绑定星链课表时自动应用</li>
+  <li><b>[Yunzai 插件]原生 JSON</b> —— 兼容 Yunzai Schedule Plugin 的原生 JSON 格式，时间信息直接存储</li>
+  <li><b>拾光课表 JSON</b> —— 兼容拾光课程表 App 的导出 JSON</li>
   <li><b>ICS 文件/链接</b> —— 支持 <code>.ics</code> 文件上传或 ICS 链接下载解析</li>
 </ul>
 
@@ -87,6 +88,7 @@ export const usage = `
   </li>
   <li>
     <b>星链课表</b> — <i>对于作者自己的学校教务网站</i>：没有直接的学校教务导入选项，通用的 AI 导入工具也无法使用。作者目前的导入方式：浏览器 F12 下载课表 HTML 数据 → 让 AI（如 OpenCode / Codex / Gemini）参考本地 HTML 结构与课表截图识别，生成符合星链 JSON 格式的文件 → 复制 JSON → 星链 App 右上角「+」→ 一键导课 → 粘贴 JSON → 点击 AI 解析即可完成导入。
+    <br>💡 <b>时间修改提示</b>：由于作者学校的教务课表网站不显示时间，需要手动在星链 App 内修改每节课的时间：右上角竖着的三个点 → 上课时间 → 点击时间表 → ✏️ 编辑符号 → 修改时间
   </li>
   <li>
     <b>拾光课程表</b> — 作者暂时无法成功导入
